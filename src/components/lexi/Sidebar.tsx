@@ -152,7 +152,7 @@ export function Sidebar({
           {/* Nav */}
           <Section title="Navigate">
             {navItems.map((n) => {
-              const active = pathname === n.to || (n.to !== "/" && pathname.startsWith(n.to));
+              const active = pathname === n.to || pathname.startsWith(n.to + "/");
               return (
                 <Link
                   key={n.to}
