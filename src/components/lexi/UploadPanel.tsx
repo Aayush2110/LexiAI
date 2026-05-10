@@ -15,11 +15,12 @@ export interface UploadedFile {
 interface UploadPanelProps {
   files: UploadedFile[];
   onChange: (files: UploadedFile[]) => void;
+  onSessionId?: (sessionId: string) => void;
 }
 
 const ACCEPT = ".pdf,.docx,.txt";
 
-export function UploadPanel({ files, onChange }: UploadPanelProps) {
+export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) {
   const [drag, setDrag] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,28 +37,44 @@ export function UploadPanel({ files, onChange }: UploadPanelProps) {
       let current = [...files, ...newOnes];
       onChange(current);
 
-      for (let i = 0; i < newOnes.length; i++) {
-        const file = list[i];
-        const meta = newOnes[i];
-        try {
-          await DocsAPI.upload(file, (p) => {
-            current = current.map((x) =>
-              x.id === meta.id ? { ...x, progress: p, status: p >= 100 ? "processing" : "uploading" } : x
-            );
-            onChange(current);
-          });
-          await new Promise((r) => setTimeout(r, 700));
+      try {
+        const fileArray = Array.from(list);
+        const result = await DocsAPI.upload(fileArray, (p) => {
           current = current.map((x) =>
-            x.id === meta.id ? { ...x, status: "indexed", progress: 100 } : x
+            newOnes.some(n => n.id === x.id) ? { ...x, progress: p, status: p >= 100 ? "processing" : "uploading" } : x
           );
           onChange(current);
-        } catch {
-          current = current.map((x) => (x.id === meta.id ? { ...x, status: "error" } : x));
-          onChange(current);
+        });
+        
+        // Mark as processing
+        current = current.map((x) =>
+          newOnes.some(n => n.id === x.id) ? { ...x, status: "processing", progress: 100 } : x
+        );
+        onChange(current);
+        
+        // Wait a bit then mark as indexed
+        await new Promise(r => setTimeout(r, 500));
+        current = current.map((x) =>
+          newOnes.some(n => n.id === x.id) ? { ...x, status: "indexed" } : x
+        );
+        onChange(current);
+        
+        // Return session_id for parent component
+        console.log('[UploadPanel] Upload result:', result);
+        if (onSessionId && result?.session_id) {
+          console.log('[UploadPanel] Calling onSessionId with:', result.session_id);
+          onSessionId(result.session_id);
+        } else {
+          console.warn('[UploadPanel] No session_id in result or no callback:', { result, hasCallback: !!onSessionId });
         }
+        return result?.session_id;
+      } catch (err: any) {
+        console.error('Upload error:', err);
+        current = current.map((x) => (newOnes.some(n => n.id === x.id) ? { ...x, status: "error" } : x));
+        onChange(current);
       }
     },
-    [files, onChange]
+    [files, onChange, onSessionId]
   );
 
   const remove = (id: string) => onChange(files.filter((f) => f.id !== id));
@@ -89,7 +106,9 @@ export function UploadPanel({ files, onChange }: UploadPanelProps) {
           accept={ACCEPT}
           multiple
           className="hidden"
-          onChange={(e) => handleFiles(e.target.files)}
+          onChange={(e) => {
+          handleFiles(e.target.files);
+        }}
         />
         <motion.div
           animate={{ y: drag ? -4 : 0 }}

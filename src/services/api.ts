@@ -6,7 +6,7 @@ import axios from "axios";
  */
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "/api",
-  timeout: 30000,
+  timeout: 120000,  // Increased to 120 seconds for LLM responses
   headers: { "Content-Type": "application/json" },
 });
 
@@ -19,35 +19,60 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
+    console.error('API Error:', err?.response?.data || err?.message || err);
     // Surface a clean error shape; future global toast can hook here.
     return Promise.reject(err?.response?.data ?? err);
   }
 );
 
-// ───────── Mock-first endpoint surface (swap with real RAG later) ─────────
 export const ChatAPI = {
-  send: async (message: string) => {
-    // TODO: POST /chat { message }
-    return { reply: `Mocked legal analysis for: "${message}"` };
-  },
-  history: async () => {
-    // TODO: GET /chat/history
-    return [];
+  send: async (message: string, sessionId: string) => {
+    const res = await api.post("/chat", { question: message, session_id: sessionId });
+    return res.data;
   },
 };
 
 export const DocsAPI = {
-  upload: async (_file: File, onProgress?: (p: number) => void) => {
-    // TODO: POST /documents (multipart)
-    for (let p = 0; p <= 100; p += 10) {
-      await new Promise((r) => setTimeout(r, 80));
-      onProgress?.(p);
+  upload: async (files: File[], onProgress?: (p: number) => void) => {
+    console.log('[DocsAPI] Starting upload:', {
+      fileCount: files.length,
+      files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+      apiBaseURL: api.defaults.baseURL
+    });
+    
+    const formData = new FormData();
+    files.forEach(f => {
+      console.log('[DocsAPI] Appending file:', f.name);
+      formData.append("files", f);
+    });
+    
+    try {
+      console.log('[DocsAPI] Sending POST request to /upload');
+      const res = await api.post("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (e) => {
+          if (e.total) {
+            const progress = Math.round((e.loaded * 100) / e.total);
+            console.log('[DocsAPI] Upload progress:', progress + '%');
+            onProgress?.(progress);
+          }
+        },
+      });
+      console.log('[DocsAPI] Upload successful:', res.data);
+      return res.data;
+    } catch (error: any) {
+      console.error('[DocsAPI] Upload failed:', {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+        config: {
+          url: error?.config?.url,
+          baseURL: error?.config?.baseURL,
+          method: error?.config?.method
+        }
+      });
+      throw error;
     }
-    return { id: crypto.randomUUID(), status: "indexed" as const };
-  },
-  list: async () => {
-    // TODO: GET /documents
-    return [];
   },
 };
 

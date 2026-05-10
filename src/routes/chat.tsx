@@ -24,8 +24,28 @@ function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [showUpload, setShowUpload] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
+  // Debug: Log session ID changes
+  const handleSessionId = (id: string) => {
+    console.log('[ChatPage] Session ID received:', id);
+    setSessionId(id);
+  };
 
   const send = async (text: string) => {
+    console.log('[ChatPage] Sending message. Session ID:', sessionId);
+    
+    if (!sessionId) {
+      const botMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: "Please upload documents first before asking questions.",
+        createdAt: Date.now(),
+      };
+      setMessages((m) => [...m, botMsg]);
+      return;
+    }
+
     const userMsg: Message = {
       id: crypto.randomUUID(),
       role: "user",
@@ -35,23 +55,25 @@ function ChatPage() {
     setMessages((m) => [...m, userMsg]);
     setLoading(true);
     try {
-      const { reply } = await ChatAPI.send(text);
-      const sample =
-        files.length > 0
-          ? `Based on your indexed documents, here's the analysis:\n\n${reply}\n\nThe relevant clauses indicate standard market terms with two notable considerations: a 30-day cure period and a liability cap tied to 12-month fees.`
-          : `${reply}\n\nUpload a contract for source-cited answers grounded in your specific documents.`;
+      const { answer, sources } = await ChatAPI.send(text, sessionId);
       const botMsg: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: sample,
+        content: answer,
         createdAt: Date.now(),
-        citations: files.length > 0
-          ? [{ label: files[0].name, page: 4 }, { label: files[0].name, page: 7 }]
-          : undefined,
+        citations: sources?.map((s: any) => ({ label: s.source, page: s.page })),
       };
-      // simulate stream
-      await new Promise((r) => setTimeout(r, 900));
       setMessages((m) => [...m, botMsg]);
+    } catch (err: any) {
+      console.error('[ChatPage] Error sending message:', err);
+      const errorMessage = err?.detail || err?.message || "Failed to get response";
+      const errMsg: Message = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: `Error: ${errorMessage}`,
+        createdAt: Date.now(),
+      };
+      setMessages((m) => [...m, errMsg]);
     } finally {
       setLoading(false);
     }
@@ -86,13 +108,14 @@ function ChatPage() {
     <MainLayout
       title="AI Legal Assistant"
       subtitle="RAG-grounded legal analysis"
-      rightSlot={<RightContextPanel files={files} />}
+      rightSlot={<RightContextPanel files={files} onFilesChange={setFiles} onSessionId={handleSessionId} />}
     >
       <div className="relative flex-1 flex flex-col min-h-0">
         {/* Floating upload toggle (mobile/tablet) */}
         <div className="xl:hidden border-b border-border px-4 py-2 flex items-center justify-between glass-strong">
           <div className="text-xs text-muted-foreground">
             {files.length > 0 ? `${files.length} document(s)` : "No documents uploaded"}
+            {sessionId && <span className="ml-2 text-success">✓ Ready</span>}
           </div>
           <button
             onClick={() => setShowUpload((s) => !s)}
@@ -108,7 +131,7 @@ function ChatPage() {
             animate={{ height: "auto", opacity: 1 }}
             className="xl:hidden border-b border-border p-4 bg-surface/40"
           >
-            <UploadPanel files={files} onChange={setFiles} />
+            <UploadPanel files={files} onChange={setFiles} onSessionId={handleSessionId} />
           </motion.div>
         )}
 
