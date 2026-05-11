@@ -7,9 +7,11 @@ Handles file upload and document processing.
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from typing import List
 from loguru import logger
+from datetime import datetime
 from app.models.request_models import UploadResponse
 from app.utils.file_utils import save_upload_file, generate_session_id
 from app.services.rag_pipeline import rag_pipeline
+from app.services.database import get_documents_collection, get_sessions_collection
 
 router = APIRouter()
 
@@ -63,6 +65,27 @@ async def upload_documents(
         
         # Process documents through RAG pipeline
         result = rag_pipeline.process_documents(file_paths, session_id)
+        
+        # Save document metadata to MongoDB
+        documents_collection = get_documents_collection()
+        for file, file_path in zip(files, file_paths):
+            await documents_collection.insert_one({
+                "session_id": session_id,
+                "filename": file.filename,
+                "file_path": file_path,
+                "file_size": file.size,
+                "file_type": file.content_type,
+                "uploaded_at": datetime.utcnow()
+            })
+        
+        # Create session record
+        sessions_collection = get_sessions_collection()
+        await sessions_collection.insert_one({
+            "session_id": session_id,
+            "created_at": datetime.utcnow(),
+            "files_count": len(files),
+            "chunks_count": result['chunks_created']
+        })
         
         return UploadResponse(
             session_id=session_id,

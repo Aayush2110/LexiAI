@@ -20,7 +20,7 @@ class SessionMetadata:
     
     def __init__(self):
         """Initialize session metadata manager"""
-        self.metadata_dir = os.path.join(settings.vectorstores_dir, ".metadata")
+        self.metadata_dir = os.path.join(settings.chromadb_dir, ".metadata")
         os.makedirs(self.metadata_dir, exist_ok=True)
     
     def save_metadata(self, session_id: str, metadata: Dict) -> None:

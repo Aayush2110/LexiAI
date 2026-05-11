@@ -28,7 +28,7 @@ Alternatives:
 """
 
 from typing import List
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from loguru import logger
 from app.core.config import settings
 

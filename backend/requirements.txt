@@ -8,16 +8,17 @@ langchain==0.1.4
 langchain-community==0.0.16
 langchain-openai==0.0.5
 langchain-google-genai==0.0.6
+numpy>=1.26.0,<2.0.0
 
 # Vector Database
-faiss-cpu>=1.7.4
+chromadb==0.4.22
 
 # Embeddings
-sentence-transformers==2.3.1
+sentence-transformers>=2.3.1
 
 # Document Processing
 PyPDF2==3.0.1
-pymupdf==1.23.21
+# pymupdf==1.24.14  # Commented out - using PyPDF2 only
 python-docx==1.1.0
 
 # Environment Variables
@@ -27,12 +28,19 @@ python-dotenv==1.0.0
 pydantic==2.5.3
 pydantic-settings==2.1.0
 
+# Authentication
+passlib[bcrypt]==1.7.4
+
 # Logging
 loguru==0.7.2
 
 # OpenAI/Gemini
 openai==1.10.0
 google-generativeai==0.3.2
+
+# Database
+motor==3.3.2
+pymongo==4.6.1
 
 # CORS
 fastapi-cors==0.0.6

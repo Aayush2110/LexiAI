@@ -14,7 +14,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface ChatItem { id: string; title: string; updatedAt: string }
+export interface ChatItem { 
+  id: string; 
+  title: string; 
+  updatedAt: string;
+  messageCount?: number;
+}
 export interface DocItem { id: string; name: string; status: "indexed" | "processing" }
 
 interface SidebarProps {

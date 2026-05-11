@@ -30,6 +30,31 @@ export const ChatAPI = {
     const res = await api.post("/chat", { question: message, session_id: sessionId });
     return res.data;
   },
+  
+  createChat: async (userId: string = "default_user") => {
+    const res = await api.post("/chats", { user_id: userId });
+    return res.data;
+  },
+  
+  listChats: async (userId: string = "default_user") => {
+    const res = await api.get("/chats", { params: { user_id: userId } });
+    return res.data;
+  },
+  
+  getChat: async (sessionId: string) => {
+    const res = await api.get(`/chats/${sessionId}`);
+    return res.data;
+  },
+  
+  updateTitle: async (sessionId: string, title: string) => {
+    const res = await api.patch(`/chats/${sessionId}/title`, { title });
+    return res.data;
+  },
+  
+  deleteChat: async (sessionId: string) => {
+    const res = await api.delete(`/chats/${sessionId}`);
+    return res.data;
+  },
 };
 
 export const DocsAPI = {

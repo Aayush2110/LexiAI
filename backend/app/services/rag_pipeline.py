@@ -175,7 +175,7 @@ class RAGPipeline:
                 }
             
             # Get total chunks count from vectorstore
-            total_chunks = vectorstore.index.ntotal if hasattr(vectorstore, 'index') else 0
+            total_chunks = vectorstore._collection.count() if hasattr(vectorstore, '_collection') else 0
             
             # Step 2: Retrieve relevant documents
             logger.info("Step 2: Retrieving relevant documents...")

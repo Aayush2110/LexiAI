@@ -55,6 +55,13 @@ class Settings(BaseSettings):
     LLM_TEMPERATURE: float = 0.1  # Lower = more deterministic responses
     LLM_MAX_TOKENS: int = 500  # Maximum response length
     
+    # MongoDB Configuration
+    MONGODB_URL: str = "mongodb://localhost:27017"
+    MONGODB_DB_NAME: str = "chat_companion"
+    
+    # ChromaDB Configuration
+    CHROMA_PERSIST_DIR: str = "./data/chromadb"
+    
     # Computed Properties
     @property
     def cors_origins_list(self) -> List[str]:
@@ -82,9 +89,12 @@ class Settings(BaseSettings):
         return path
     
     @property
-    def vectorstores_dir(self) -> str:
-        """Directory for FAISS vector stores"""
-        path = os.path.join(self.BASE_DIR, "data", "vectorstores")
+    def chromadb_dir(self) -> str:
+        """Directory for ChromaDB persistence"""
+        if os.path.isabs(self.CHROMA_PERSIST_DIR):
+            path = self.CHROMA_PERSIST_DIR
+        else:
+            path = os.path.join(self.BASE_DIR, self.CHROMA_PERSIST_DIR)
         os.makedirs(path, exist_ok=True)
         return path
     

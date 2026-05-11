@@ -33,7 +33,7 @@ Retrieval Strategies:
 """
 
 from typing import List, Tuple
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain.schema import Document
 from loguru import logger
 from app.core.config import settings
@@ -59,7 +59,7 @@ class RetrieverService:
     
     def retrieve(
         self,
-        vectorstore: FAISS,
+        vectorstore: Chroma,
         query: str,
         top_k: int = None
     ) -> List[Document]:
@@ -99,7 +99,7 @@ class RetrieverService:
     
     def retrieve_with_scores(
         self,
-        vectorstore: FAISS,
+        vectorstore: Chroma,
         query: str,
         top_k: int = None
     ) -> List[Tuple[Document, float]]:
@@ -143,7 +143,7 @@ class RetrieverService:
     
     def retrieve_with_threshold(
         self,
-        vectorstore: FAISS,
+        vectorstore: Chroma,
         query: str,
         score_threshold: float = 0.7,
         top_k: int = None
