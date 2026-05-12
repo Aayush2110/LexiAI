@@ -25,26 +25,26 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="dark min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* Animated gradient backdrop */}
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      {/* Subtle gradient backdrop - monochrome */}
       <div
-        className="pointer-events-none fixed inset-0 -z-10 opacity-60"
+        className="pointer-events-none fixed inset-0 -z-10 opacity-30"
         style={{
           background:
-            "radial-gradient(60% 50% at 50% 0%, oklch(0.62 0.19 258 / 0.35), transparent 60%), radial-gradient(50% 40% at 80% 20%, oklch(0.62 0.22 295 / 0.30), transparent 60%)",
+            "radial-gradient(60% 50% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 60%), radial-gradient(50% 40% at 80% 20%, rgba(255, 255, 255, 0.03), transparent 60%)",
         }}
       />
 
       {/* Nav */}
-      <header className="sticky top-0 z-30 glass-strong border-b border-border/60">
+      <header className="sticky top-0 z-30 bg-surface/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="h-9 w-9 rounded-xl gradient-bg grid place-items-center shadow-xl shadow-primary/30 group-hover:shadow-primary/40 transition-all duration-300">
-              <Scale className="h-5 w-5 text-white" />
+            <div className="h-9 w-9 rounded-xl bg-primary text-primary-foreground grid place-items-center transition-all duration-300">
+              <Scale className="h-5 w-5" />
             </div>
             <span className="font-semibold tracking-tight">LexiAI</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground/80">
+          <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-foreground transition-colors duration-200">Features</a>
             <a href="#how" className="hover:text-foreground transition-colors duration-200">How it works</a>
             <a href="#pricing" className="hover:text-foreground transition-colors duration-200">Pricing</a>
@@ -52,13 +52,13 @@ function Landing() {
           <div className="flex items-center gap-2">
             <Link
               to="/login"
-              className="hidden sm:inline-flex text-sm px-3.5 py-2 rounded-xl hover:bg-accent/60 transition-all duration-200"
+              className="hidden sm:inline-flex text-sm px-3.5 py-2 rounded-xl hover:bg-accent transition-all duration-200"
             >
               Log in
             </Link>
             <Link
               to="/signup"
-              className="text-sm px-4 py-2 rounded-xl gradient-bg text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300"
+              className="text-sm px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300"
             >
               Get started
             </Link>
@@ -71,9 +71,9 @@ function Landing() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass text-xs text-muted-foreground/80 border border-border/60"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent border border-border text-xs text-muted-foreground"
         >
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <Sparkles className="h-3.5 w-3.5" />
           RAG-powered legal intelligence
         </motion.div>
 
@@ -84,7 +84,7 @@ function Landing() {
           className="mt-6 text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05]"
         >
           Your AI co-counsel for{" "}
-          <span className="gradient-text">contracts & clauses</span>
+          <span className="text-foreground">contracts & clauses</span>
         </motion.h1>
 
         <motion.p
@@ -105,13 +105,13 @@ function Landing() {
         >
           <Link
             to="/chat"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl gradient-bg text-white font-medium shadow-2xl shadow-primary/30 hover:shadow-3xl hover:shadow-primary/50 hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all duration-300"
           >
             Try the assistant <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href="#features"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl glass hover:border-primary/50 transition-all duration-200"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-border bg-surface hover:border-muted-foreground/50 transition-all duration-200"
           >
             <Github className="h-4 w-4" /> See how it works
           </a>
@@ -124,29 +124,29 @@ function Landing() {
           transition={{ delay: 0.25, duration: 0.6 }}
           className="mt-16 mx-auto max-w-4xl"
         >
-          <div className="gradient-border rounded-3xl p-1.5 shadow-2xl shadow-primary/25">
-            <div className="rounded-3xl glass-strong p-6 sm:p-8 text-left">
+          <div className="rounded-3xl border border-border p-1.5">
+            <div className="rounded-3xl bg-surface border border-border p-6 sm:p-8 text-left">
               <div className="flex items-center gap-2 mb-5">
                 <span className="h-3 w-3 rounded-full bg-destructive/70" />
                 <span className="h-3 w-3 rounded-full bg-warning/80" />
                 <span className="h-3 w-3 rounded-full bg-success/80" />
-                <span className="ml-3 text-[11px] text-muted-foreground/70">lexi.ai/chat</span>
+                <span className="ml-3 text-[11px] text-muted-foreground">lexi.ai/chat</span>
               </div>
               <div className="space-y-4">
-                <div className="self-end ml-auto max-w-[80%] rounded-2xl gradient-bg text-white px-4 py-3 text-sm w-fit shadow-lg">
+                <div className="self-end ml-auto max-w-[80%] rounded-2xl bg-primary text-primary-foreground px-4 py-3 text-sm w-fit">
                   Summarize the termination clause in MSA_v3.pdf
                 </div>
-                <div className="glass rounded-2xl px-4 py-3.5 text-sm max-w-[90%] hover:border-primary/30 transition-all duration-200">
+                <div className="bg-accent border border-border rounded-2xl px-4 py-3.5 text-sm max-w-[90%] hover:border-muted-foreground/50 transition-all duration-200">
                   <p className="leading-relaxed">
                     Either party may terminate on <strong>30 days' written notice</strong> for material breach
                     not cured within the notice window. Mutual obligations under
                     <em> §7 Confidentiality</em> survive termination.
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg bg-primary/15 text-primary border border-primary/25">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg bg-background border border-border">
                       <FileText className="h-3 w-3" /> MSA_v3 · p.4
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg bg-primary/15 text-primary border border-primary/25">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg bg-background border border-border">
                       <FileText className="h-3 w-3" /> MSA_v3 · p.7
                     </span>
                   </div>
@@ -161,7 +161,7 @@ function Landing() {
       <section id="features" className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">
-            Built for <span className="gradient-text">legal teams</span>
+            Built for <span className="text-foreground">legal teams</span>
           </h2>
           <p className="mt-3 text-muted-foreground">Everything you need to move fast — without skipping the fine print.</p>
         </div>
@@ -173,13 +173,13 @@ function Landing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              className="glass rounded-2xl p-6 hover:border-primary/50 card-hover"
+              className="bg-surface border border-border rounded-2xl p-6 hover:border-muted-foreground/50 transition-all duration-150"
             >
-              <div className="h-12 w-12 rounded-xl bg-primary/10 border border-primary/25 grid place-items-center text-primary mb-5 shadow-sm">
+              <div className="h-12 w-12 rounded-xl bg-accent border border-border grid place-items-center mb-5">
                 <f.icon className="h-5.5 w-5.5" />
               </div>
               <div className="font-semibold text-base">{f.title}</div>
-              <p className="text-sm text-muted-foreground/70 mt-2 leading-relaxed">{f.desc}</p>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -189,8 +189,8 @@ function Landing() {
       <section id="how" className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {STEPS.map((s, i) => (
-            <div key={s.title} className="relative glass rounded-2xl p-6">
-              <div className="text-xs font-semibold text-primary mb-2">Step {i + 1}</div>
+            <div key={s.title} className="relative bg-surface border border-border rounded-2xl p-6">
+              <div className="text-xs font-semibold text-muted-foreground mb-2">Step {i + 1}</div>
               <div className="text-lg font-semibold">{s.title}</div>
               <p className="text-sm text-muted-foreground mt-2">{s.desc}</p>
             </div>
@@ -200,7 +200,7 @@ function Landing() {
 
       {/* Pricing teaser */}
       <section id="pricing" className="max-w-5xl mx-auto px-5 sm:px-8 py-20 text-center">
-        <div className="gradient-border rounded-3xl p-10">
+        <div className="border border-border rounded-3xl p-10 bg-surface">
           <h3 className="text-2xl sm:text-3xl font-semibold">Start free. Scale when you're ready.</h3>
           <p className="mt-3 text-muted-foreground">All core features included during beta.</p>
           <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-xl mx-auto text-sm text-left">
@@ -212,7 +212,7 @@ function Landing() {
           </ul>
           <Link
             to="/signup"
-            className="mt-7 inline-flex items-center gap-2 px-5 py-3 rounded-xl gradient-bg text-white font-medium shadow-xl shadow-primary/30"
+            className="mt-7 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all duration-150"
           >
             Create your account <ArrowRight className="h-4 w-4" />
           </Link>

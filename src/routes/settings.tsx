@@ -64,7 +64,7 @@ function Settings() {
               {tab === "profile" && (
                 <>
                   <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-lg bg-primary flex items-center justify-center text-white font-semibold text-lg">AK</div>
+                    <div className="h-16 w-16 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-semibold text-lg">AK</div>
                     <div>
                       <div className="font-semibold text-base">Alex Kim</div>
                       <div className="text-xs text-muted-foreground mt-0.5">alex@lexi.ai</div>
@@ -108,10 +108,10 @@ function Settings() {
                 </>
               )}
 
-              <div className="pt-5 border-t border-border/60 flex justify-end">
+              <div className="pt-5 border-t border-border flex justify-end">
                 <button
                   onClick={save}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-all duration-150"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all duration-150"
                 >
                   {saved ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
                   {saved ? "Saved" : "Save changes"}
@@ -130,11 +130,11 @@ function SettingField({
 }: { label: string; defaultValue?: string; type?: string }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-muted-foreground/80">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
       <input
         type={type}
         defaultValue={defaultValue}
-        className="mt-2 w-full rounded-lg card px-3.5 py-3 text-sm outline-none focus:border-primary transition-all duration-150"
+        className="mt-2 w-full rounded-lg border border-border bg-background px-3.5 py-3 text-sm outline-none focus:border-foreground/30 transition-all duration-150"
       />
     </label>
   );
@@ -146,16 +146,16 @@ function Toggle({ label, desc, defaultOn = false }: { label: string; desc: strin
     <div className="flex items-center justify-between gap-4 py-2">
       <div>
         <div className="text-sm font-medium">{label}</div>
-        <div className="text-xs text-muted-foreground/70 mt-0.5">{desc}</div>
+        <div className="text-xs text-muted-foreground mt-0.5">{desc}</div>
       </div>
       <button
         onClick={() => setOn((v) => !v)}
-        className={`relative h-7 w-12 rounded-full transition-all duration-150 ${on ? "bg-primary" : "bg-muted"}`}
+        className={`relative h-7 w-12 rounded-full transition-all duration-150 ${on ? "bg-primary" : "bg-accent border border-border"}`}
       >
         <motion.span
           animate={{ x: on ? 24 : 2 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="absolute top-1 h-5 w-5 rounded-full bg-white"
+          className={`absolute top-1 h-5 w-5 rounded-full ${on ? "bg-primary-foreground" : "bg-foreground"}`}
         />
       </button>
     </div>

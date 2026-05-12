@@ -5,9 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * LexiAI Professional Design System
- * Clean, minimal, enterprise-grade legal-tech UI
- * Inspired by: Notion, Linear, Vercel, Stripe
+ * LexiAI Monochrome Design System
+ * Clean, minimal, ChatGPT-inspired UI
+ * Enterprise-grade legal-tech interface
  */
 
 @theme inline {
@@ -54,105 +54,87 @@
   --animate-bounce-dot: bounce-dot 1.2s infinite ease-in-out;
 }
 
+/* DARK MODE - ChatGPT-inspired monochrome */
 :root {
   --radius: 8px;
 
-  /* ========================================
-     PROFESSIONAL DARK SAAS COLOR PALETTE
-     Clean Enterprise Legal AI Style
-     ======================================== */
+  /* Pure monochrome palette */
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --surface: #111111;
+  --surface-elevated: #171717;
+  --muted: #171717;
+  --muted-foreground: #A1A1AA;
 
-  /* BASE COLORS */
-  --background: #0B0F14;
-  --foreground: #E5E7EB;
-  --surface: #141922;
-  --surface-elevated: #202736;
-  --surface-secondary: #1A202C;
-  --surface-hover: #242C3D;
-  
-  --muted: #1A202C;
-  --muted-foreground: #9CA3AF;
+  --card: #111111;
+  --card-foreground: #FFFFFF;
+  --popover: #111111;
+  --popover-foreground: #FFFFFF;
 
-  /* CARDS & CONTAINERS */
-  --card: #141922;
-  --card-foreground: #E5E7EB;
-  --popover: #1A202C;
-  --popover-foreground: #E5E7EB;
+  --primary: #FFFFFF;
+  --primary-foreground: #000000;
+  --secondary: #171717;
+  --secondary-foreground: #FFFFFF;
+  --accent: #1F1F1F;
+  --accent-foreground: #FFFFFF;
 
-  /* ACCENT COLORS (USE SPARINGLY - 10-15% of UI) */
-  --primary: #2F6FED;
-  --primary-hover: #3A74F2;
-  --primary-muted: #315FCB;
-  --primary-foreground: #FFFFFF;
-  --primary-transparent: rgba(47, 111, 237, 0.12);
-  
-  --secondary: #1A202C;
-  --secondary-foreground: #E5E7EB;
-  --secondary-hover: #242C3D;
-  
-  --accent: #232A36;
-  --accent-foreground: #E5E7EB;
-
-  /* STATUS COLORS */
   --success: #22C55E;
-  --success-bg: rgba(34, 197, 94, 0.12);
   --warning: #F59E0B;
-  --warning-bg: rgba(245, 158, 11, 0.12);
   --destructive: #EF4444;
-  --destructive-bg: rgba(239, 68, 68, 0.12);
   --destructive-foreground: #FFFFFF;
 
-  /* TEXT COLORS */
-  --text-primary: #E5E7EB;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
-  --text-disabled: #4B5563;
+  --border: #2A2A2A;
+  --input: #2A2A2A;
+  --ring: #FFFFFF;
 
-  /* BORDER COLORS */
-  --border: #232A36;
-  --border-secondary: #2B3444;
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  
-  /* INPUT COLORS */
-  --input: #111827;
-  --input-border: #232A36;
-  --input-focus: #315FCB;
-  --input-placeholder: #6B7280;
-  
-  /* FOCUS & RING */
-  --ring: rgba(47, 111, 237, 0.25);
-
-  /* SIDEBAR COLORS */
-  --sidebar: #0F141C;
-  --sidebar-foreground: #E5E7EB;
-  --sidebar-primary: #2F6FED;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #1A2232;
-  --sidebar-accent-foreground: #E5E7EB;
-  --sidebar-border: #232A36;
-  --sidebar-ring: #2F6FED;
-  --sidebar-hover: #1C2433;
-
-  /* CHAT UI COLORS */
-  --chat-ai-bubble: #141922;
-  --chat-user-bubble: #1B2433;
-  --chat-input-bg: #111827;
-  --chat-hover: #1E293B;
-
-  /* BUTTON COLORS */
-  --btn-primary: #2F6FED;
-  --btn-primary-hover: #3A74F2;
-  --btn-secondary: #1A202C;
-  --btn-secondary-hover: #242C3D;
-  --btn-ghost-hover: rgba(255, 255, 255, 0.06);
-
-  /* SHADOWS (Soft, No Neon Glow) */
-  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --shadow-large: 0 8px 24px rgba(0, 0, 0, 0.24);
+  --sidebar: #000000;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #FFFFFF;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1F1F1F;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #2A2A2A;
+  --sidebar-ring: #FFFFFF;
 }
 
-.dark {
-  /* Same as :root — app is dark-by-default */
+/* LIGHT MODE - Clean monochrome */
+.light {
+  --background: #FFFFFF;
+  --foreground: #111111;
+  --surface: #F8F8F8;
+  --surface-elevated: #F1F1F1;
+  --muted: #F1F1F1;
+  --muted-foreground: #52525B;
+
+  --card: #F8F8F8;
+  --card-foreground: #111111;
+  --popover: #FFFFFF;
+  --popover-foreground: #111111;
+
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F1F1;
+  --secondary-foreground: #111111;
+  --accent: #EAEAEA;
+  --accent-foreground: #111111;
+
+  --success: #16A34A;
+  --warning: #D97706;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #D4D4D8;
+  --input: #D4D4D8;
+  --ring: #000000;
+
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #111111;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F1F1F1;
+  --sidebar-accent-foreground: #111111;
+  --sidebar-border: #D4D4D8;
+  --sidebar-ring: #000000;
 }
 
 @keyframes fade-in {
@@ -183,7 +165,7 @@
 }
 
 @layer utilities {
-  /* Clean card style - no glassmorphism */
+  /* Clean card style - flat monochrome */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -196,43 +178,27 @@
     border-radius: var(--radius-lg);
   }
 
-  /* Subtle hover effect */
+  /* Subtle hover effect - no gradients */
   .card-hover {
     transition: all 0.15s ease;
   }
   .card-hover:hover {
-    border-color: var(--border-secondary);
-    background: var(--surface-hover);
+    border-color: var(--muted-foreground);
+    background: var(--surface-elevated);
   }
 
-  /* Primary button - clean, no gradients */
+  /* Primary button - monochrome */
   .btn-primary {
-    background: var(--btn-primary);
+    background: var(--primary);
     color: var(--primary-foreground);
     border: none;
     transition: all 0.15s ease;
   }
   .btn-primary:hover {
-    background: var(--btn-primary-hover);
+    opacity: 0.9;
   }
 
-  /* Secondary button */
-  .btn-secondary {
-    background: var(--btn-secondary);
-    color: var(--secondary-foreground);
-    border: 1px solid var(--border);
-    transition: all 0.15s ease;
-  }
-  .btn-secondary:hover {
-    background: var(--btn-secondary-hover);
-  }
-
-  /* Ghost button */
-  .btn-ghost:hover {
-    background: var(--btn-ghost-hover);
-  }
-
-  /* Scrollbar styling */
+  /* Scrollbar styling - minimal */
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
@@ -246,66 +212,23 @@
     border-radius: 999px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: var(--border-secondary);
+    background: var(--muted-foreground);
   }
 
-  /* Active state with subtle left border */
+  /* Active state - subtle */
   .active-item {
     background: var(--sidebar-accent);
     border-left: 2px solid var(--primary);
   }
 
-  /* Input focus state - clean focus ring */
+  /* Input focus state - monochrome */
   .input-focus:focus {
     outline: none;
-    border-color: var(--input-focus);
-    box-shadow: 0 0 0 3px var(--ring);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
   }
-
-  /* Chat message bubbles */
-  .chat-ai-bubble {
-    background: var(--chat-ai-bubble);
-    border: 1px solid var(--border);
-  }
-
-  .chat-user-bubble {
-    background: var(--chat-user-bubble);
-    border: 1px solid var(--border-secondary);
-  }
-
-  /* Soft shadows - no neon glow */
-  .shadow-soft {
-    box-shadow: var(--shadow-soft);
-  }
-
-  .shadow-large {
-    box-shadow: var(--shadow-large);
-  }
-
-  /* Status backgrounds */
-  .bg-success-soft {
-    background: var(--success-bg);
-    color: var(--success);
-  }
-
-  .bg-warning-soft {
-    background: var(--warning-bg);
-    color: var(--warning);
-  }
-
-  .bg-error-soft {
-    background: var(--destructive-bg);
-    color: var(--destructive);
-  }
-
-  /* Accent transparent background */
-  .bg-accent-soft {
-    background: var(--primary-transparent);
-    color: var(--primary);
-  }
-
-  /* Divider */
-  .divider-subtle {
-    border-color: var(--border-subtle);
+  
+  .light .input-focus:focus {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   }
 }

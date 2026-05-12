@@ -36,8 +36,8 @@ export function MessageBubble({
       className={cn("group flex gap-3 w-full", isUser ? "justify-end" : "justify-start")}
     >
       {!isUser && (
-        <div className="h-8 w-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
-          <Sparkles className="h-4 w-4 text-primary" />
+        <div className="h-8 w-8 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
+          <Sparkles className="h-4 w-4" />
         </div>
       )}
 
@@ -46,7 +46,7 @@ export function MessageBubble({
           className={cn(
             "rounded-lg px-4 py-3 text-sm leading-relaxed",
             isUser
-              ? "bg-primary text-white"
+              ? "bg-primary text-primary-foreground"
               : "card"
           )}
         >
@@ -107,8 +107,8 @@ export function MessageBubble({
 export function TypingIndicator() {
   return (
     <div className="flex gap-3">
-      <div className="h-8 w-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
-        <Sparkles className="h-4 w-4 text-primary" />
+      <div className="h-8 w-8 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
+        <Sparkles className="h-4 w-4" />
       </div>
       <div className="card rounded-lg px-4 py-3 flex gap-1.5">
         <span className="h-2 w-2 rounded-full bg-muted-foreground animate-bounce-dot" style={{ animationDelay: "0s" }} />

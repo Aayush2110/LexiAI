@@ -48,8 +48,8 @@ export function ChatLayout({ messages, loading, onSend, onRegenerate }: ChatLayo
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-8">
           {empty ? (
             <div className="text-center py-12">
-              <div className="mx-auto h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Sparkles className="h-6 w-6 text-primary" />
+              <div className="mx-auto h-12 w-12 rounded-lg bg-accent border border-border flex items-center justify-center mb-6">
+                <Sparkles className="h-6 w-6" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-semibold">
                 AI Legal Assistant
@@ -63,10 +63,10 @@ export function ChatLayout({ messages, loading, onSend, onRegenerate }: ChatLayo
                   <button
                     key={s.title}
                     onClick={() => submit(s.title)}
-                    className="group card p-4 text-left hover:border-primary/30 transition-all duration-150"
+                    className="group card p-4 text-left hover:border-muted-foreground/50 transition-all duration-150"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="h-9 w-9 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="h-9 w-9 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
                         <s.icon className="h-4 w-4" />
                       </div>
                       <div>
@@ -93,7 +93,7 @@ export function ChatLayout({ messages, loading, onSend, onRegenerate }: ChatLayo
       {/* Composer */}
       <div className="border-t border-border bg-surface">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-4">
-          <div className="relative flex items-end gap-2 rounded-lg border border-border bg-background p-2 focus-within:border-primary transition-colors duration-150">
+          <div className="relative flex items-end gap-2 rounded-lg border border-border bg-background p-2 focus-within:border-foreground/30 transition-colors duration-150">
             <button
               className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg hover:bg-accent transition-colors duration-150 text-muted-foreground"
               title="Attach"
@@ -117,7 +117,7 @@ export function ChatLayout({ messages, loading, onSend, onRegenerate }: ChatLayo
             <button
               onClick={() => submit()}
               disabled={!value.trim() || loading}
-              className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
+              className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
             >
               <Send className="h-4 w-4" />
             </button>

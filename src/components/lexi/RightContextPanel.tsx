@@ -33,7 +33,7 @@ export function RightContextPanel({ files, onFilesChange, onSessionId, currentSe
           Active Document
         </div>
         <div className="card p-3 flex items-start gap-3">
-          <div className="h-9 w-9 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+          <div className="h-9 w-9 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
             <FileText className="h-4 w-4" />
           </div>
           <div className="min-w-0">

@@ -36,13 +36,13 @@ function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-4 py-3 text-sm font-medium hover:bg-primary/90 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-4 py-3 text-sm font-medium hover:opacity-90 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? "Signing in…" : "Sign in"} <ArrowRight className="h-4 w-4" />
         </button>
       </form>
       <Divider />
-      <button className="w-full flex items-center justify-center gap-2 rounded-xl card px-4 py-3 text-sm hover:border-primary/50 transition-all duration-200">
+      <button className="w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm hover:border-muted-foreground/50 transition-all duration-200">
         <Github className="h-4 w-4" /> Continue with GitHub
       </button>
       <p className="mt-6 text-center text-sm text-muted-foreground">
@@ -57,13 +57,12 @@ export function AuthShell({
   title, subtitle, children,
 }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <div className="dark min-h-screen relative overflow-hidden bg-background text-foreground flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen relative overflow-hidden bg-background text-foreground flex items-center justify-center px-4 py-10">
       <div
-        className="pointer-events-none absolute inset-0 -z-10 animate-gradient"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-20"
         style={{
           background:
-            "linear-gradient(120deg, oklch(0.62 0.19 258 / 0.25), oklch(0.62 0.22 295 / 0.25), oklch(0.18 0.03 265) 70%)",
-          backgroundSize: "200% 200%",
+            "radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05), transparent 50%)",
         }}
       />
       <motion.div
@@ -73,12 +72,12 @@ export function AuthShell({
         className="w-full max-w-md"
       >
         <Link to="/" className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="h-11 w-11 rounded-lg bg-primary flex items-center justify-center">
-            <Scale className="h-6 w-6 text-white" />
+          <div className="h-11 w-11 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+            <Scale className="h-6 w-6" />
           </div>
           <span className="font-semibold text-lg">LexiAI</span>
         </Link>
-        <div className="card-elevated rounded-2xl p-8 sm:p-9">
+        <div className="bg-surface border border-border rounded-2xl p-8 sm:p-9">
           <h1 className="text-2xl font-semibold">{title}</h1>
           <p className="text-sm text-muted-foreground mt-2">{subtitle}</p>
           <div className="mt-8">{children}</div>
@@ -100,8 +99,8 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-muted-foreground/80">{label}</span>
-      <div className="mt-2 flex items-center gap-2.5 rounded-lg card px-3.5 py-3 focus-within:border-primary transition-all duration-150">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      <div className="mt-2 flex items-center gap-2.5 rounded-lg border border-border bg-background px-3.5 py-3 focus-within:border-foreground/30 transition-all duration-150">
         <Icon className="h-4 w-4 text-muted-foreground" />
         <input
           type={type}

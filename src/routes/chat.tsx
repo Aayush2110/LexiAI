@@ -82,7 +82,7 @@ function ChatPage() {
         console.log('[ChatPage] Loading most recent chat:', chats[0].id);
         await selectChat(chats[0].id);
       }
-      // Don't auto-create chats - let user click "New Chat" button
+      // Removed auto-creation logic - user must click "New Chat" button
       
       setInitialized(true);
     };
@@ -106,12 +106,11 @@ function ChatPage() {
 
   const handleDeleteChat = async (id: string) => {
     await deleteChat(id);
-    // If deleted chat was active, clear the session
+    // If deleted chat was active, just clear the session
     if (id === sessionId) {
       setSessionId(null);
       setMessages([]);
       setFiles([]);
-      console.log('[ChatPage] Deleted active chat, cleared session');
     }
   };
 

@@ -92,7 +92,7 @@ export function MainLayout({
   }, []);
 
   return (
-    <div className="dark min-h-screen flex bg-background text-foreground">
+    <div className="min-h-screen flex bg-background text-foreground">
       <Sidebar
         open={open}
         onClose={() => setOpen(false)}

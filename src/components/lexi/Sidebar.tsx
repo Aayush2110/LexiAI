@@ -147,8 +147,8 @@ export function Sidebar({
         {/* Logo */}
         <div className="flex items-center justify-between px-4 h-14 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-              <Scale className="h-4 w-4 text-white" />
+            <div className="h-7 w-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+              <Scale className="h-4 w-4" />
             </div>
             <div>
               <div className="font-semibold text-sm">LexiAI</div>
@@ -166,7 +166,7 @@ export function Sidebar({
         <div className="p-3 border-b border-border">
           <button
             onClick={onNewChat}
-            className="w-full flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium bg-primary text-white hover:bg-primary/90 transition-colors duration-150"
+            className="w-full flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-all duration-150"
           >
             <Plus className="h-4 w-4" />
             New Chat
@@ -324,7 +324,7 @@ export function Sidebar({
         {/* Profile */}
         <div className="border-t border-border p-3">
           <div className="flex items-center gap-2 rounded-lg bg-accent p-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white text-xs font-medium">
+            <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
               AK
             </div>
             <div className="flex-1 min-w-0">

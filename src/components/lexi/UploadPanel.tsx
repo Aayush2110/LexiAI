@@ -98,8 +98,8 @@ export function UploadPanel({ files, onChange, onSessionId, currentSessionId }: 
         className={cn(
           "relative cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-all duration-150",
           drag
-            ? "border-primary bg-primary/5"
-            : "border-border hover:border-primary/50 hover:bg-accent/30"
+            ? "border-foreground bg-accent"
+            : "border-border hover:border-muted-foreground hover:bg-accent/50"
         )}
       >
         <input
@@ -112,8 +112,8 @@ export function UploadPanel({ files, onChange, onSessionId, currentSessionId }: 
           handleFiles(e.target.files);
         }}
         />
-        <div className="mx-auto h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-          <UploadCloud className="h-6 w-6 text-primary" />
+        <div className="mx-auto h-12 w-12 rounded-lg bg-accent border border-border flex items-center justify-center mb-3">
+          <UploadCloud className="h-6 w-6" />
         </div>
         <div className="text-sm font-medium">Drop files or click to upload</div>
         <div className="text-xs text-muted-foreground mt-1">PDF, DOCX, TXT · up to 25 MB each</div>
@@ -135,7 +135,7 @@ export function UploadPanel({ files, onChange, onSessionId, currentSessionId }: 
                 key={f.id}
                 className="card p-3 flex items-center gap-3"
               >
-                <div className="h-9 w-9 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <div className="h-9 w-9 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
                   <FileText className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -157,7 +157,7 @@ export function UploadPanel({ files, onChange, onSessionId, currentSessionId }: 
                     <div className="mt-2 h-1 w-full rounded-full bg-accent overflow-hidden">
                       <div
                         style={{ width: `${f.status === "processing" ? 100 : f.progress}%` }}
-                        className="h-full bg-primary transition-all duration-300"
+                        className="h-full bg-foreground transition-all duration-300"
                       />
                     </div>
                   )}

@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { ChatProvider } from "@/contexts/ChatContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 import appCss from "../styles.css?url";
 
@@ -67,8 +68,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <ChatProvider>
-      <Outlet />
-    </ChatProvider>
+    <ThemeProvider>
+      <ChatProvider>
+        <Outlet />
+      </ChatProvider>
+    </ThemeProvider>
   );
 }

@@ -1,4 +1,5 @@
-import { Menu, Search, Bell } from "lucide-react";
+import { Menu, Search, Bell, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface NavbarProps {
   onMenu: () => void;
@@ -7,6 +8,8 @@ interface NavbarProps {
 }
 
 export function Navbar({ onMenu, title, subtitle }: NavbarProps) {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header className="sticky top-0 z-20 bg-surface border-b border-border">
       <div className="flex items-center gap-4 px-4 sm:px-6 h-14">
@@ -25,7 +28,7 @@ export function Navbar({ onMenu, title, subtitle }: NavbarProps) {
           )}
         </div>
 
-        <div className="hidden md:flex items-center gap-2 bg-background border border-border rounded-lg px-3 py-1.5 w-64 hover:border-primary/30 transition-colors duration-150">
+        <div className="hidden md:flex items-center gap-2 bg-background border border-border rounded-lg px-3 py-1.5 w-64 hover:border-muted-foreground/30 transition-colors duration-150">
           <Search className="h-3.5 w-3.5 text-muted-foreground" />
           <input
             placeholder="Search..."
@@ -36,12 +39,24 @@ export function Navbar({ onMenu, title, subtitle }: NavbarProps) {
           </kbd>
         </div>
 
+        <button 
+          onClick={toggleTheme}
+          className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-accent transition-colors duration-150"
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+        >
+          {theme === 'dark' ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
+        </button>
+
         <button className="relative h-8 w-8 flex items-center justify-center rounded-lg hover:bg-accent transition-colors duration-150">
           <Bell className="h-4 w-4" />
           <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
         </button>
 
-        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white text-xs font-medium">
+        <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
           AK
         </div>
       </div>

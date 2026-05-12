@@ -38,13 +38,13 @@ function Signup() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-4 py-3 text-sm font-medium hover:bg-primary/90 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground px-4 py-3 text-sm font-medium hover:opacity-90 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? "Creating account…" : "Create account"} <ArrowRight className="h-4 w-4" />
           </button>
       </form>
       <Divider />
-      <button className="w-full flex items-center justify-center gap-2 rounded-xl card px-4 py-3 text-sm hover:border-primary/50 transition-all duration-200">
+      <button className="w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm hover:border-muted-foreground/50 transition-all duration-200">
         <Github className="h-4 w-4" /> Sign up with GitHub
       </button>
       <p className="mt-6 text-center text-sm text-muted-foreground">
