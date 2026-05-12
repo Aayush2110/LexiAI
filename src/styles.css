@@ -57,43 +57,98 @@
 :root {
   --radius: 8px;
 
-  /* Professional Enterprise Color Palette */
+  /* ========================================
+     PROFESSIONAL DARK SAAS COLOR PALETTE
+     Clean Enterprise Legal AI Style
+     ======================================== */
+
+  /* BASE COLORS */
   --background: #0B0F14;
   --foreground: #E5E7EB;
   --surface: #141922;
-  --surface-elevated: #1A202C;
+  --surface-elevated: #202736;
+  --surface-secondary: #1A202C;
+  --surface-hover: #242C3D;
+  
   --muted: #1A202C;
   --muted-foreground: #9CA3AF;
 
+  /* CARDS & CONTAINERS */
   --card: #141922;
   --card-foreground: #E5E7EB;
   --popover: #1A202C;
   --popover-foreground: #E5E7EB;
 
-  --primary: #3B82F6;
+  /* ACCENT COLORS (USE SPARINGLY - 10-15% of UI) */
+  --primary: #2F6FED;
+  --primary-hover: #3A74F2;
+  --primary-muted: #315FCB;
   --primary-foreground: #FFFFFF;
+  --primary-transparent: rgba(47, 111, 237, 0.12);
+  
   --secondary: #1A202C;
   --secondary-foreground: #E5E7EB;
+  --secondary-hover: #242C3D;
+  
   --accent: #232A36;
   --accent-foreground: #E5E7EB;
 
+  /* STATUS COLORS */
   --success: #22C55E;
+  --success-bg: rgba(34, 197, 94, 0.12);
   --warning: #F59E0B;
+  --warning-bg: rgba(245, 158, 11, 0.12);
   --destructive: #EF4444;
+  --destructive-bg: rgba(239, 68, 68, 0.12);
   --destructive-foreground: #FFFFFF;
 
-  --border: #232A36;
-  --input: #232A36;
-  --ring: #3B82F6;
+  /* TEXT COLORS */
+  --text-primary: #E5E7EB;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --text-disabled: #4B5563;
 
-  --sidebar: #0B0F14;
+  /* BORDER COLORS */
+  --border: #232A36;
+  --border-secondary: #2B3444;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  
+  /* INPUT COLORS */
+  --input: #111827;
+  --input-border: #232A36;
+  --input-focus: #315FCB;
+  --input-placeholder: #6B7280;
+  
+  /* FOCUS & RING */
+  --ring: rgba(47, 111, 237, 0.25);
+
+  /* SIDEBAR COLORS */
+  --sidebar: #0F141C;
   --sidebar-foreground: #E5E7EB;
-  --sidebar-primary: #3B82F6;
+  --sidebar-primary: #2F6FED;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #141922;
+  --sidebar-accent: #1A2232;
   --sidebar-accent-foreground: #E5E7EB;
   --sidebar-border: #232A36;
-  --sidebar-ring: #3B82F6;
+  --sidebar-ring: #2F6FED;
+  --sidebar-hover: #1C2433;
+
+  /* CHAT UI COLORS */
+  --chat-ai-bubble: #141922;
+  --chat-user-bubble: #1B2433;
+  --chat-input-bg: #111827;
+  --chat-hover: #1E293B;
+
+  /* BUTTON COLORS */
+  --btn-primary: #2F6FED;
+  --btn-primary-hover: #3A74F2;
+  --btn-secondary: #1A202C;
+  --btn-secondary-hover: #242C3D;
+  --btn-ghost-hover: rgba(255, 255, 255, 0.06);
+
+  /* SHADOWS (Soft, No Neon Glow) */
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.18);
+  --shadow-large: 0 8px 24px rgba(0, 0, 0, 0.24);
 }
 
 .dark {
@@ -146,19 +201,35 @@
     transition: all 0.15s ease;
   }
   .card-hover:hover {
-    border-color: rgba(59, 130, 246, 0.3);
-    background: var(--surface-elevated);
+    border-color: var(--border-secondary);
+    background: var(--surface-hover);
   }
 
-  /* Primary button - minimal gradient */
+  /* Primary button - clean, no gradients */
   .btn-primary {
-    background: var(--primary);
+    background: var(--btn-primary);
     color: var(--primary-foreground);
     border: none;
     transition: all 0.15s ease;
   }
   .btn-primary:hover {
-    background: #2563EB;
+    background: var(--btn-primary-hover);
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    background: var(--btn-secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    transition: all 0.15s ease;
+  }
+  .btn-secondary:hover {
+    background: var(--btn-secondary-hover);
+  }
+
+  /* Ghost button */
+  .btn-ghost:hover {
+    background: var(--btn-ghost-hover);
   }
 
   /* Scrollbar styling */
@@ -175,7 +246,7 @@
     border-radius: 999px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: #232A36;
+    background: var(--border-secondary);
   }
 
   /* Active state with subtle left border */
@@ -184,10 +255,57 @@
     border-left: 2px solid var(--primary);
   }
 
-  /* Input focus state */
+  /* Input focus state - clean focus ring */
   .input-focus:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+
+  /* Chat message bubbles */
+  .chat-ai-bubble {
+    background: var(--chat-ai-bubble);
+    border: 1px solid var(--border);
+  }
+
+  .chat-user-bubble {
+    background: var(--chat-user-bubble);
+    border: 1px solid var(--border-secondary);
+  }
+
+  /* Soft shadows - no neon glow */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-large {
+    box-shadow: var(--shadow-large);
+  }
+
+  /* Status backgrounds */
+  .bg-success-soft {
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .bg-warning-soft {
+    background: var(--warning-bg);
+    color: var(--warning);
+  }
+
+  .bg-error-soft {
+    background: var(--destructive-bg);
+    color: var(--destructive);
+  }
+
+  /* Accent transparent background */
+  .bg-accent-soft {
+    background: var(--primary-transparent);
+    color: var(--primary);
+  }
+
+  /* Divider */
+  .divider-subtle {
+    border-color: var(--border-subtle);
   }
 }

@@ -69,7 +69,7 @@ function ChatPage() {
     }
   }, [currentChat]);
 
-  // Initialize: load most recent chat or create new one
+  // Initialize: load most recent chat (don't auto-create)
   useEffect(() => {
     const init = async () => {
       // Wait for context to finish loading
@@ -81,11 +81,8 @@ function ChatPage() {
         // Load the most recent chat
         console.log('[ChatPage] Loading most recent chat:', chats[0].id);
         await selectChat(chats[0].id);
-      } else if (chats.length === 0 && !currentChat) {
-        // No chats exist, create a new one
-        console.log('[ChatPage] No chats found, creating new one');
-        await handleCreateNewChat();
       }
+      // Don't auto-create chats - let user click "New Chat" button
       
       setInitialized(true);
     };
@@ -109,9 +106,12 @@ function ChatPage() {
 
   const handleDeleteChat = async (id: string) => {
     await deleteChat(id);
-    // If deleted chat was active, create a new one
+    // If deleted chat was active, clear the session
     if (id === sessionId) {
-      await handleCreateNewChat();
+      setSessionId(null);
+      setMessages([]);
+      setFiles([]);
+      console.log('[ChatPage] Deleted active chat, cleared session');
     }
   };
 
