@@ -11,24 +11,27 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    // Check localStorage first
-    const stored = localStorage.getItem('lexi-theme') as Theme;
-    if (stored === 'dark' || stored === 'light') {
-      return stored;
-    }
-    // Default to dark mode
-    return 'dark';
-  });
+  // Initialize with default theme (SSR-safe)
+  const [theme, setThemeState] = useState<Theme>('dark');
 
+  // Load theme from localStorage after mount (client-side only)
   useEffect(() => {
-    // Apply theme to document root
-    const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    
-    // Save to localStorage
-    localStorage.setItem('lexi-theme', theme);
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('lexi-theme') as Theme;
+      if (stored === 'dark' || stored === 'light') {
+        setThemeState(stored);
+      }
+    }
+  }, []);
+
+  // Apply theme to document and save to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const root = document.documentElement;
+      root.classList.remove('light', 'dark');
+      root.classList.add(theme);
+      localStorage.setItem('lexi-theme', theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => {

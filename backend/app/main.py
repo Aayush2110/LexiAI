@@ -109,6 +109,18 @@ async def root():
     }
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    """
+    Favicon endpoint
+    
+    Returns 204 No Content to prevent 500 errors.
+    The actual favicon is served by the frontend.
+    """
+    from fastapi.responses import Response
+    return Response(status_code=204)
+
+
 if __name__ == "__main__":
     import uvicorn
     

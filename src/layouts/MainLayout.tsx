@@ -85,6 +85,8 @@ export function MainLayout({
   };
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const onResize = () => setOpen(window.innerWidth >= 1024);
     onResize();
     window.addEventListener("resize", onResize);
