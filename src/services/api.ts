@@ -46,6 +46,11 @@ export const ChatAPI = {
     return res.data;
   },
   
+  getDocuments: async (sessionId: string) => {
+    const res = await api.get(`/documents/${sessionId}`);
+    return res.data;
+  },
+  
   updateTitle: async (sessionId: string, title: string) => {
     const res = await api.patch(`/chats/${sessionId}/title`, { title });
     return res.data;
@@ -58,10 +63,11 @@ export const ChatAPI = {
 };
 
 export const DocsAPI = {
-  upload: async (files: File[], onProgress?: (p: number) => void) => {
+  upload: async (files: File[], sessionId?: string, onProgress?: (p: number) => void) => {
     console.log('[DocsAPI] Starting upload:', {
       fileCount: files.length,
       files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+      sessionId: sessionId,
       apiBaseURL: api.defaults.baseURL
     });
     
@@ -70,6 +76,12 @@ export const DocsAPI = {
       console.log('[DocsAPI] Appending file:', f.name);
       formData.append("files", f);
     });
+    
+    // Add session_id if provided
+    if (sessionId) {
+      console.log('[DocsAPI] Adding session_id to upload:', sessionId);
+      formData.append("session_id", sessionId);
+    }
     
     try {
       console.log('[DocsAPI] Sending POST request to /upload');

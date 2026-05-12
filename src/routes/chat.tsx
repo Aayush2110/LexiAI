@@ -8,6 +8,7 @@ import type { Message } from "@/components/lexi/MessageBubble";
 import { ChatAPI } from "@/services/api";
 import { motion } from "framer-motion";
 import { FileUp } from "lucide-react";
+import { useChatContext } from "@/contexts/ChatContext";
 
 export const Route = createFileRoute("/chat")({
   head: () => ({
@@ -20,81 +21,102 @@ export const Route = createFileRoute("/chat")({
 });
 
 function ChatPage() {
+  const {
+    chats,
+    currentChat,
+    createChat,
+    selectChat,
+    addMessage,
+    updateChatTitle,
+    deleteChat,
+    refreshChats,
+    loading: contextLoading,
+  } = useChatContext();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [showUpload, setShowUpload] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [currentChatTitle, setCurrentChatTitle] = useState("New Chat");
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
-  // Load or create initial chat on mount
+  // Sync messages and documents with current chat
   useEffect(() => {
-    if (!isInitialized) {
-      loadOrCreateChat();
-      setIsInitialized(true);
-    }
-  }, [isInitialized]);
-
-  const loadOrCreateChat = async () => {
-    try {
-      const { chats } = await ChatAPI.listChats();
+    if (currentChat) {
+      console.log('[ChatPage] Current chat changed:', currentChat.id, 'with', currentChat.messages.length, 'messages');
+      setMessages(currentChat.messages);
+      setSessionId(currentChat.id);
       
-      if (chats.length > 0) {
-        // Load most recent chat
-        const recent = chats[0];
-        await loadChat(recent.session_id);
+      // Load documents for this chat
+      if (currentChat.documents && currentChat.documents.length > 0) {
+        const loadedFiles: UploadedFile[] = currentChat.documents.map((doc) => ({
+          id: crypto.randomUUID(),
+          name: doc.filename,
+          size: doc.file_size,
+          progress: 100,
+          status: "indexed" as const,
+        }));
+        setFiles(loadedFiles);
+        console.log('[ChatPage] Loaded', loadedFiles.length, 'documents for chat');
       } else {
-        // Create new chat if none exist
-        await createNewChat();
+        setFiles([]);
+        console.log('[ChatPage] No documents for this chat');
       }
-    } catch (error) {
-      console.error('[ChatPage] Error loading chats:', error);
-      await createNewChat();
-    }
-  };
-
-  const loadChat = async (chatSessionId: string) => {
-    try {
-      console.log('[ChatPage] Loading chat:', chatSessionId);
-      const chat = await ChatAPI.getChat(chatSessionId);
-      
-      setSessionId(chat.session_id);
-      setCurrentChatTitle(chat.title);
-      
-      // Convert backend messages to frontend format
-      const loadedMessages: Message[] = chat.messages.map((msg: any) => ({
-        id: crypto.randomUUID(),
-        role: msg.role,
-        content: msg.content,
-        createdAt: new Date(msg.timestamp).getTime(),
-      }));
-      
-      setMessages(loadedMessages);
-      console.log('[ChatPage] Loaded', loadedMessages.length, 'messages');
-    } catch (error) {
-      console.error('[ChatPage] Error loading chat:', error);
-    }
-  };
-
-  const createNewChat = async () => {
-    try {
-      const response = await ChatAPI.createChat();
-      setSessionId(response.session_id);
-      setCurrentChatTitle("New Chat");
+    } else {
       setMessages([]);
-      console.log('[ChatPage] Created new chat:', response.session_id);
-      return response.session_id;
-    } catch (error) {
-      console.error('[ChatPage] Error creating chat:', error);
-      return null;
+      setSessionId(null);
+      setFiles([]);
+    }
+  }, [currentChat]);
+
+  // Initialize: load most recent chat or create new one
+  useEffect(() => {
+    const init = async () => {
+      // Wait for context to finish loading
+      if (contextLoading || initialized) return;
+      
+      console.log('[ChatPage] Initializing. Chats available:', chats.length);
+      
+      if (chats.length > 0 && !currentChat) {
+        // Load the most recent chat
+        console.log('[ChatPage] Loading most recent chat:', chats[0].id);
+        await selectChat(chats[0].id);
+      } else if (chats.length === 0 && !currentChat) {
+        // No chats exist, create a new one
+        console.log('[ChatPage] No chats found, creating new one');
+        await handleCreateNewChat();
+      }
+      
+      setInitialized(true);
+    };
+    
+    init();
+  }, [chats, currentChat, contextLoading, initialized]);
+
+  const handleCreateNewChat = async () => {
+    const newSessionId = await createChat();
+    if (newSessionId) {
+      setSessionId(newSessionId);
+      setMessages([]);
+      setFiles([]); // Clear files for new chat
+      console.log('[ChatPage] Created new chat, cleared files');
     }
   };
 
-  // Debug: Log session ID changes
-  const handleSessionId = (id: string) => {
-    console.log('[ChatPage] Session ID received:', id);
-    setSessionId(id);
+  const handleSelectChat = async (id: string) => {
+    await selectChat(id);
+  };
+
+  const handleDeleteChat = async (id: string) => {
+    await deleteChat(id);
+    // If deleted chat was active, create a new one
+    if (id === sessionId) {
+      await handleCreateNewChat();
+    }
+  };
+
+  const handleRenameChat = async (id: string, newTitle: string) => {
+    await updateChatTitle(id, newTitle);
   };
 
   const send = async (text: string) => {
@@ -108,6 +130,7 @@ function ChatPage() {
         createdAt: Date.now(),
       };
       setMessages((m) => [...m, botMsg]);
+      addMessage(botMsg);
       return;
     }
 
@@ -118,6 +141,7 @@ function ChatPage() {
       createdAt: Date.now(),
     };
     setMessages((m) => [...m, userMsg]);
+    addMessage(userMsg);
     setLoading(true);
     
     try {
@@ -130,21 +154,12 @@ function ChatPage() {
         citations: sources?.map((s: any) => ({ label: s.source, page: s.page })),
       };
       setMessages((m) => [...m, botMsg]);
+      addMessage(botMsg);
       
-      // Auto-update title after first message
-      if (messages.length === 0 && currentChatTitle === "New Chat") {
-        // Title will be auto-generated by backend
-        // Refresh chat list to get updated title
-        setTimeout(async () => {
-          try {
-            const { chats } = await ChatAPI.listChats();
-            const current = chats.find(c => c.session_id === sessionId);
-            if (current) {
-              setCurrentChatTitle(current.title);
-            }
-          } catch (e) {
-            console.error('Error refreshing title:', e);
-          }
+      // Refresh chat list to get updated title (auto-generated on first message)
+      if (messages.length === 0) {
+        setTimeout(() => {
+          refreshChats();
         }, 500);
       }
     } catch (err: any) {
@@ -157,6 +172,7 @@ function ChatPage() {
         createdAt: Date.now(),
       };
       setMessages((m) => [...m, errMsg]);
+      addMessage(errMsg);
     } finally {
       setLoading(false);
     }
@@ -171,20 +187,32 @@ function ChatPage() {
       const trimmed = prev.slice(0, idx);
       setLoading(true);
       setTimeout(() => {
-        setMessages((m) => [
-          ...m,
-          {
-            id: crypto.randomUUID(),
-            role: "assistant",
-            content: `Regenerated answer for "${prompt}":\n\nA fresh perspective with refined clause references and risk highlights.`,
-            createdAt: Date.now(),
-            citations: files[0] ? [{ label: files[0].name, page: 5 }] : undefined,
-          },
-        ]);
+        const regeneratedMsg: Message = {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: `Regenerated answer for "${prompt}":\n\nA fresh perspective with refined clause references and risk highlights.`,
+          createdAt: Date.now(),
+          citations: files[0] ? [{ label: files[0].name, page: 5 }] : undefined,
+        };
+        setMessages((m) => [...m, regeneratedMsg]);
+        addMessage(regeneratedMsg);
         setLoading(false);
       }, 800);
       return trimmed;
     });
+  };
+
+  const handleSessionId = (id: string) => {
+    console.log('[ChatPage] Session ID received from upload:', id);
+    setSessionId(id);
+    
+    // Refresh the current chat to load the newly uploaded documents
+    if (currentChat && currentChat.id === id) {
+      console.log('[ChatPage] Refreshing chat to load uploaded documents');
+      setTimeout(() => {
+        selectChat(id);
+      }, 1000); // Wait a bit for backend to process
+    }
   };
 
   return (
@@ -192,9 +220,11 @@ function ChatPage() {
       title="AI Legal Assistant"
       subtitle="RAG-grounded legal analysis"
       activeChatId={sessionId || undefined}
-      onNewChat={createNewChat}
-      onSelectChat={loadChat}
-      rightSlot={<RightContextPanel files={files} onFilesChange={setFiles} onSessionId={handleSessionId} />}
+      onNewChat={handleCreateNewChat}
+      onSelectChat={handleSelectChat}
+      onDeleteChat={handleDeleteChat}
+      onRenameChat={handleRenameChat}
+      rightSlot={<RightContextPanel files={files} onFilesChange={setFiles} onSessionId={handleSessionId} currentSessionId={sessionId || undefined} />}
     >
       <div className="relative flex-1 flex flex-col min-h-0">
         {/* Floating upload toggle (mobile/tablet) */}

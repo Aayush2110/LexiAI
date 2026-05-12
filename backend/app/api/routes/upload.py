@@ -4,8 +4,8 @@ Upload Route
 Handles file upload and document processing.
 """
 
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from typing import List
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form
+from typing import List, Optional
 from loguru import logger
 from datetime import datetime
 from app.models.request_models import UploadResponse
@@ -18,13 +18,14 @@ router = APIRouter()
 
 @router.post("/upload", response_model=UploadResponse, tags=["Documents"])
 async def upload_documents(
-    files: List[UploadFile] = File(..., description="PDF, DOCX, or TXT files")
+    files: List[UploadFile] = File(..., description="PDF, DOCX, or TXT files"),
+    session_id: Optional[str] = Form(None, description="Optional session ID to associate documents with")
 ):
     """
     Upload and process documents
     
     Process:
-    1. Generate unique session ID
+    1. Use provided session ID or generate unique session ID
     2. Validate and save uploaded files
     3. Process through RAG pipeline:
        - Extract text
@@ -35,6 +36,7 @@ async def upload_documents(
     
     Args:
         files: List of uploaded files
+        session_id: Optional session ID to use (if not provided, generates new one)
         
     Returns:
         UploadResponse: Session ID and processing statistics
@@ -50,9 +52,12 @@ async def upload_documents(
         if not files:
             raise HTTPException(status_code=400, detail="No files provided")
         
-        # Generate session ID
-        session_id = generate_session_id()
-        logger.info(f"Generated session ID: {session_id}")
+        # Use provided session ID or generate new one
+        if session_id:
+            logger.info(f"Using provided session ID: {session_id}")
+        else:
+            session_id = generate_session_id()
+            logger.info(f"Generated new session ID: {session_id}")
         
         # Save uploaded files
         file_paths = []

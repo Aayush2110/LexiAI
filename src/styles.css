@@ -5,18 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * LexiAI design system. All tokens use oklch and are mapped to Tailwind via @theme inline.
- * Premium dark legal-tech theme. Reference palette:
- *   bg #0B1120, surface #111827, blue #3B82F6, purple #8B5CF6, text #E5E7EB, muted #9CA3AF
+ * LexiAI Professional Design System
+ * Clean, minimal, enterprise-grade legal-tech UI
+ * Inspired by: Notion, Linear, Vercel, Stripe
  */
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -40,8 +38,6 @@
 
   --color-surface: var(--surface);
   --color-surface-elevated: var(--surface-elevated);
-  --color-brand-blue: var(--brand-blue);
-  --color-brand-purple: var(--brand-purple);
   --color-success: var(--success);
   --color-warning: var(--warning);
 
@@ -54,67 +50,56 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --animate-fade-in-up: fade-in-up 0.4s ease-out;
-  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-fade-in: fade-in 0.2s ease-out;
   --animate-bounce-dot: bounce-dot 1.2s infinite ease-in-out;
-  --animate-shimmer: shimmer 2.2s linear infinite;
-  --animate-gradient: gradient-pan 12s ease infinite;
 }
 
-/* Dark-first: design lives in dark by default. Light is a fallback. */
 :root {
-  --radius: 1rem;
+  --radius: 8px;
 
-  /* Core LexiAI dark palette */
-  --background: oklch(0.18 0.03 265);          /* #0B1120 */
-  --foreground: oklch(0.92 0.01 250);          /* #E5E7EB */
-  --surface: oklch(0.23 0.025 265);            /* #111827 */
-  --surface-elevated: oklch(0.27 0.028 265);
-  --muted: oklch(0.27 0.025 265);
-  --muted-foreground: oklch(0.72 0.02 255);    /* #9CA3AF */
+  /* Professional Enterprise Color Palette */
+  --background: #0B0F14;
+  --foreground: #E5E7EB;
+  --surface: #141922;
+  --surface-elevated: #1A202C;
+  --muted: #1A202C;
+  --muted-foreground: #9CA3AF;
 
-  --card: oklch(0.23 0.025 265);
-  --card-foreground: oklch(0.92 0.01 250);
-  --popover: oklch(0.21 0.025 265);
-  --popover-foreground: oklch(0.92 0.01 250);
+  --card: #141922;
+  --card-foreground: #E5E7EB;
+  --popover: #1A202C;
+  --popover-foreground: #E5E7EB;
 
-  --brand-blue: oklch(0.62 0.19 258);          /* #3B82F6 */
-  --brand-purple: oklch(0.62 0.22 295);        /* #8B5CF6 */
+  --primary: #3B82F6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1A202C;
+  --secondary-foreground: #E5E7EB;
+  --accent: #232A36;
+  --accent-foreground: #E5E7EB;
 
-  --primary: oklch(0.62 0.19 258);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.28 0.03 265);
-  --secondary-foreground: oklch(0.92 0.01 250);
-  --accent: oklch(0.32 0.05 280);
-  --accent-foreground: oklch(0.95 0.01 250);
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
 
-  --success: oklch(0.72 0.17 155);
-  --warning: oklch(0.78 0.16 75);
-  --destructive: oklch(0.65 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
+  --border: #232A36;
+  --input: #232A36;
+  --ring: #3B82F6;
 
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.62 0.19 258 / 60%);
-
-  --sidebar: oklch(0.16 0.025 265);
-  --sidebar-foreground: oklch(0.9 0.01 250);
-  --sidebar-primary: oklch(0.62 0.19 258);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.26 0.03 265);
-  --sidebar-accent-foreground: oklch(0.92 0.01 250);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.62 0.19 258 / 60%);
+  --sidebar: #0B0F14;
+  --sidebar-foreground: #E5E7EB;
+  --sidebar-primary: #3B82F6;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #141922;
+  --sidebar-accent-foreground: #E5E7EB;
+  --sidebar-border: #232A36;
+  --sidebar-ring: #3B82F6;
 }
 
 .dark {
   /* Same as :root — app is dark-by-default */
 }
 
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -123,75 +108,86 @@
   0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
   40%           { transform: scale(1);   opacity: 1; }
 }
-@keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-@keyframes gradient-pan {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html, body, #root { height: 100%; }
+  * { 
+    border-color: var(--color-border);
+  }
+  html, body, #root { 
+    height: 100%; 
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
-    background-image:
-      radial-gradient(ellipse 80% 60% at 20% -10%, oklch(0.62 0.19 258 / 0.18), transparent 60%),
-      radial-gradient(ellipse 60% 50% at 100% 0%, oklch(0.62 0.22 295 / 0.15), transparent 60%);
-    background-attachment: fixed;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
   }
 }
 
 @layer utilities {
-  .glass {
-    background: color-mix(in oklab, var(--surface) 70%, transparent);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  /* Clean card style - no glassmorphism */
+  .card {
+    background: var(--surface);
     border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
   }
-  .glass-strong {
-    background: color-mix(in oklab, var(--surface-elevated) 85%, transparent);
-    backdrop-filter: blur(20px) saturate(160%);
+  
+  .card-elevated {
+    background: var(--surface-elevated);
     border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
   }
-  .gradient-text {
-    background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+
+  /* Subtle hover effect */
+  .card-hover {
+    transition: all 0.15s ease;
   }
-  .gradient-bg {
-    background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+  .card-hover:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    background: var(--surface-elevated);
   }
-  .gradient-border {
-    position: relative;
-    background:
-      linear-gradient(var(--surface), var(--surface)) padding-box,
-      linear-gradient(135deg, var(--brand-blue), var(--brand-purple)) border-box;
-    border: 1px solid transparent;
+
+  /* Primary button - minimal gradient */
+  .btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    transition: all 0.15s ease;
   }
-  .skeleton {
-    background: linear-gradient(
-      90deg,
-      color-mix(in oklab, var(--surface) 80%, transparent) 0%,
-      color-mix(in oklab, var(--surface-elevated) 80%, transparent) 50%,
-      color-mix(in oklab, var(--surface) 80%, transparent) 100%
-    );
-    background-size: 800px 100%;
-    animation: shimmer 2.2s linear infinite;
+  .btn-primary:hover {
+    background: #2563EB;
   }
+
+  /* Scrollbar styling */
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
-  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar { 
+    width: 4px; 
+    height: 4px; 
+  }
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background: var(--border);
     border-radius: 999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #232A36;
+  }
+
+  /* Active state with subtle left border */
+  .active-item {
+    background: var(--sidebar-accent);
+    border-left: 2px solid var(--primary);
+  }
+
+  /* Input focus state */
+  .input-focus:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 }

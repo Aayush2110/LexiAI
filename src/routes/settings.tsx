@@ -41,10 +41,10 @@ function Settings() {
                 <button
                   key={t.id}
                   onClick={() => setTab(t.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
+                  className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm transition-all duration-150 ${
                     tab === t.id
-                      ? "glass border-primary/40 text-foreground"
-                      : "text-muted-foreground hover:bg-accent/50"
+                      ? "card border-primary text-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
                   }`}
                 >
                   <t.icon className="h-4 w-4" />
@@ -56,17 +56,18 @@ function Settings() {
             {/* Panel */}
             <motion.div
               key={tab}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="glass rounded-2xl p-6 space-y-5"
+              transition={{ duration: 0.3 }}
+              className="card rounded-2xl p-6 space-y-6"
             >
               {tab === "profile" && (
                 <>
                   <div className="flex items-center gap-4">
-                    <div className="h-14 w-14 rounded-2xl gradient-bg grid place-items-center text-white font-semibold">AK</div>
+                    <div className="h-16 w-16 rounded-lg bg-primary flex items-center justify-center text-white font-semibold text-lg">AK</div>
                     <div>
-                      <div className="font-semibold">Alex Kim</div>
-                      <div className="text-xs text-muted-foreground">alex@lexi.ai</div>
+                      <div className="font-semibold text-base">Alex Kim</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">alex@lexi.ai</div>
                     </div>
                   </div>
                   <SettingField label="Display name" defaultValue="Alex Kim" />
@@ -95,8 +96,8 @@ function Settings() {
                     {["Dark", "Midnight", "System"].map((t, i) => (
                       <button
                         key={t}
-                        className={`rounded-xl glass p-3 text-sm hover:border-primary/40 transition-colors ${
-                          i === 0 ? "border-primary/60" : ""
+                        className={`rounded-lg card p-3 text-sm hover:border-primary/40 transition-colors ${
+                          i === 0 ? "border-primary" : ""
                         }`}
                       >
                         {t}
@@ -107,10 +108,10 @@ function Settings() {
                 </>
               )}
 
-              <div className="pt-4 border-t border-border flex justify-end">
+              <div className="pt-5 border-t border-border/60 flex justify-end">
                 <button
                   onClick={save}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl gradient-bg text-white text-sm font-medium shadow-md shadow-primary/30"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-all duration-150"
                 >
                   {saved ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
                   {saved ? "Saved" : "Save changes"}
@@ -129,11 +130,11 @@ function SettingField({
 }: { label: string; defaultValue?: string; type?: string }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground/80">{label}</span>
       <input
         type={type}
         defaultValue={defaultValue}
-        className="mt-1.5 w-full rounded-xl glass px-3 py-2.5 text-sm outline-none focus:border-primary/50 transition-colors"
+        className="mt-2 w-full rounded-lg card px-3.5 py-3 text-sm outline-none focus:border-primary transition-all duration-150"
       />
     </label>
   );
@@ -142,19 +143,19 @@ function SettingField({
 function Toggle({ label, desc, defaultOn = false }: { label: string; desc: string; defaultOn?: boolean }) {
   const [on, setOn] = useState(defaultOn);
   return (
-    <div className="flex items-center justify-between gap-4 py-1">
+    <div className="flex items-center justify-between gap-4 py-2">
       <div>
         <div className="text-sm font-medium">{label}</div>
-        <div className="text-xs text-muted-foreground">{desc}</div>
+        <div className="text-xs text-muted-foreground/70 mt-0.5">{desc}</div>
       </div>
       <button
         onClick={() => setOn((v) => !v)}
-        className={`relative h-6 w-11 rounded-full transition-colors ${on ? "gradient-bg" : "bg-muted"}`}
+        className={`relative h-7 w-12 rounded-full transition-all duration-150 ${on ? "bg-primary" : "bg-muted"}`}
       >
         <motion.span
-          animate={{ x: on ? 22 : 2 }}
+          animate={{ x: on ? 24 : 2 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="absolute top-1 h-4 w-4 rounded-full bg-white shadow"
+          className="absolute top-1 h-5 w-5 rounded-full bg-white"
         />
       </button>
     </div>

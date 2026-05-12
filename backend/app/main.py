@@ -10,7 +10,7 @@ from loguru import logger
 from app.core.config import settings
 from app.core.logging import setup_logging
 from app.core.security import validate_api_keys
-from app.api.routes import health, upload, chat, auth
+from app.api.routes import health, upload, chat, auth, documents
 
 # Initialize logging
 setup_logging()
@@ -38,6 +38,7 @@ app.include_router(health.router)
 app.include_router(upload.router)
 app.include_router(chat.router)
 app.include_router(auth.router)
+app.include_router(documents.router)
 
 
 from app.services.database import MongoDB

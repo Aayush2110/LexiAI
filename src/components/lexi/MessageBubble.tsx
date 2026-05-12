@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Copy, Check, RefreshCw, Sparkles, User, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,39 +32,36 @@ export function MessageBubble({
   });
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
+    <div
       className={cn("group flex gap-3 w-full", isUser ? "justify-end" : "justify-start")}
     >
       {!isUser && (
-        <div className="h-8 w-8 shrink-0 rounded-xl gradient-bg grid place-items-center shadow-lg shadow-primary/20">
-          <Sparkles className="h-4 w-4 text-white" />
+        <div className="h-8 w-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
+          <Sparkles className="h-4 w-4 text-primary" />
         </div>
       )}
 
       <div className={cn("flex flex-col gap-1.5 max-w-[85%] sm:max-w-[75%]", isUser && "items-end")}>
         <div
           className={cn(
-            "rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm",
+            "rounded-lg px-4 py-3 text-sm leading-relaxed",
             isUser
-              ? "gradient-bg text-white rounded-br-md"
-              : "glass text-foreground rounded-bl-md"
+              ? "bg-primary text-white"
+              : "card"
           )}
         >
           <p className="whitespace-pre-wrap">{message.content}</p>
 
           {!isUser && message.citations && message.citations.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-border/60 flex flex-wrap gap-1.5">
+            <div className="mt-3 pt-3 border-t border-border flex flex-wrap gap-2">
               {message.citations.map((c, i) => (
                 <span
                   key={i}
-                  className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-primary/15 text-primary border border-primary/20"
+                  className="inline-flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-md bg-accent text-foreground border border-border"
                 >
-                  <FileText className="h-2.5 w-2.5" />
+                  <FileText className="h-3 w-3" />
                   {c.label}
-                  {c.page && <span className="opacity-70">· p.{c.page}</span>}
+                  {c.page && <span className="text-muted-foreground">· p.{c.page}</span>}
                 </span>
               ))}
             </div>
@@ -79,10 +75,10 @@ export function MessageBubble({
           )}
         >
           <span>{time}</span>
-          <span className="opacity-40">·</span>
+          <span>·</span>
           <button
             onClick={copy}
-            className="inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity hover:text-foreground"
+            className="inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-foreground"
           >
             {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
             {copied ? "Copied" : "Copy"}
@@ -90,7 +86,7 @@ export function MessageBubble({
           {!isUser && onRegenerate && (
             <button
               onClick={() => onRegenerate(message.id)}
-              className="inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity hover:text-foreground"
+              className="inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-foreground"
             >
               <RefreshCw className="h-3 w-3" />
               Regenerate
@@ -100,29 +96,25 @@ export function MessageBubble({
       </div>
 
       {isUser && (
-        <div className="h-8 w-8 shrink-0 rounded-xl bg-surface-elevated border border-border grid place-items-center">
+        <div className="h-8 w-8 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
           <User className="h-4 w-4 text-foreground" />
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
 
 export function TypingIndicator() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex gap-3"
-    >
-      <div className="h-8 w-8 shrink-0 rounded-xl gradient-bg grid place-items-center shadow-lg shadow-primary/20">
-        <Sparkles className="h-4 w-4 text-white" />
+    <div className="flex gap-3">
+      <div className="h-8 w-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
+        <Sparkles className="h-4 w-4 text-primary" />
       </div>
-      <div className="glass rounded-2xl rounded-bl-md px-4 py-3 flex gap-1.5">
+      <div className="card rounded-lg px-4 py-3 flex gap-1.5">
         <span className="h-2 w-2 rounded-full bg-muted-foreground animate-bounce-dot" style={{ animationDelay: "0s" }} />
         <span className="h-2 w-2 rounded-full bg-muted-foreground animate-bounce-dot" style={{ animationDelay: "0.15s" }} />
         <span className="h-2 w-2 rounded-full bg-muted-foreground animate-bounce-dot" style={{ animationDelay: "0.3s" }} />
       </div>
-    </motion.div>
+    </div>
   );
 }

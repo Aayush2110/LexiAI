@@ -36,29 +36,29 @@ function Landing() {
       />
 
       {/* Nav */}
-      <header className="sticky top-0 z-30 glass-strong border-b border-border">
+      <header className="sticky top-0 z-30 glass-strong border-b border-border/60">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl gradient-bg grid place-items-center shadow-lg shadow-primary/30">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="h-9 w-9 rounded-xl gradient-bg grid place-items-center shadow-xl shadow-primary/30 group-hover:shadow-primary/40 transition-all duration-300">
               <Scale className="h-5 w-5 text-white" />
             </div>
-            <span className="font-semibold">LexiAI</span>
+            <span className="font-semibold tracking-tight">LexiAI</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
-            <a href="#features" className="hover:text-foreground transition">Features</a>
-            <a href="#how" className="hover:text-foreground transition">How it works</a>
-            <a href="#pricing" className="hover:text-foreground transition">Pricing</a>
+          <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground/80">
+            <a href="#features" className="hover:text-foreground transition-colors duration-200">Features</a>
+            <a href="#how" className="hover:text-foreground transition-colors duration-200">How it works</a>
+            <a href="#pricing" className="hover:text-foreground transition-colors duration-200">Pricing</a>
           </nav>
           <div className="flex items-center gap-2">
             <Link
               to="/login"
-              className="hidden sm:inline-flex text-sm px-3 py-1.5 rounded-lg hover:bg-accent transition-colors"
+              className="hidden sm:inline-flex text-sm px-3.5 py-2 rounded-xl hover:bg-accent/60 transition-all duration-200"
             >
               Log in
             </Link>
             <Link
               to="/signup"
-              className="text-sm px-3.5 py-1.5 rounded-lg gradient-bg text-white shadow-md shadow-primary/30 hover:shadow-primary/50 transition-shadow"
+              className="text-sm px-4 py-2 rounded-xl gradient-bg text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300"
             >
               Get started
             </Link>
@@ -71,9 +71,9 @@ function Landing() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs text-muted-foreground"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass text-xs text-muted-foreground/80 border border-border/60"
         >
-          <Sparkles className="h-3 w-3 text-primary" />
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
           RAG-powered legal intelligence
         </motion.div>
 
@@ -105,13 +105,13 @@ function Landing() {
         >
           <Link
             to="/chat"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl gradient-bg text-white font-medium shadow-xl shadow-primary/30 hover:shadow-primary/50 transition-shadow"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl gradient-bg text-white font-medium shadow-2xl shadow-primary/30 hover:shadow-3xl hover:shadow-primary/50 hover:scale-105 transition-all duration-300"
           >
             Try the assistant <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href="#features"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl glass hover:border-primary/40 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl glass hover:border-primary/50 transition-all duration-200"
           >
             <Github className="h-4 w-4" /> See how it works
           </a>
@@ -121,33 +121,33 @@ function Landing() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
+          transition={{ delay: 0.25, duration: 0.6 }}
           className="mt-16 mx-auto max-w-4xl"
         >
-          <div className="gradient-border rounded-3xl p-1 shadow-2xl shadow-primary/20">
-            <div className="rounded-3xl glass-strong p-5 sm:p-7 text-left">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
-                <span className="h-2.5 w-2.5 rounded-full bg-warning/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-success/80" />
-                <span className="ml-3 text-[11px] text-muted-foreground">lexi.ai/chat</span>
+          <div className="gradient-border rounded-3xl p-1.5 shadow-2xl shadow-primary/25">
+            <div className="rounded-3xl glass-strong p-6 sm:p-8 text-left">
+              <div className="flex items-center gap-2 mb-5">
+                <span className="h-3 w-3 rounded-full bg-destructive/70" />
+                <span className="h-3 w-3 rounded-full bg-warning/80" />
+                <span className="h-3 w-3 rounded-full bg-success/80" />
+                <span className="ml-3 text-[11px] text-muted-foreground/70">lexi.ai/chat</span>
               </div>
-              <div className="space-y-3">
-                <div className="self-end ml-auto max-w-[80%] rounded-2xl gradient-bg text-white px-4 py-2.5 text-sm w-fit">
+              <div className="space-y-4">
+                <div className="self-end ml-auto max-w-[80%] rounded-2xl gradient-bg text-white px-4 py-3 text-sm w-fit shadow-lg">
                   Summarize the termination clause in MSA_v3.pdf
                 </div>
-                <div className="glass rounded-2xl px-4 py-3 text-sm max-w-[90%]">
-                  <p>
+                <div className="glass rounded-2xl px-4 py-3.5 text-sm max-w-[90%] hover:border-primary/30 transition-all duration-200">
+                  <p className="leading-relaxed">
                     Either party may terminate on <strong>30 days' written notice</strong> for material breach
                     not cured within the notice window. Mutual obligations under
                     <em> §7 Confidentiality</em> survive termination.
                   </p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-primary/15 text-primary border border-primary/20">
-                      <FileText className="h-2.5 w-2.5" /> MSA_v3 · p.4
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg bg-primary/15 text-primary border border-primary/25">
+                      <FileText className="h-3 w-3" /> MSA_v3 · p.4
                     </span>
-                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-primary/15 text-primary border border-primary/20">
-                      <FileText className="h-2.5 w-2.5" /> MSA_v3 · p.7
+                    <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg bg-primary/15 text-primary border border-primary/25">
+                      <FileText className="h-3 w-3" /> MSA_v3 · p.7
                     </span>
                   </div>
                 </div>
@@ -173,13 +173,13 @@ function Landing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              className="glass rounded-2xl p-6 hover:border-primary/40 transition-colors"
+              className="glass rounded-2xl p-6 hover:border-primary/50 card-hover"
             >
-              <div className="h-11 w-11 rounded-xl bg-primary/10 border border-primary/20 grid place-items-center text-primary mb-4">
-                <f.icon className="h-5 w-5" />
+              <div className="h-12 w-12 rounded-xl bg-primary/10 border border-primary/25 grid place-items-center text-primary mb-5 shadow-sm">
+                <f.icon className="h-5.5 w-5.5" />
               </div>
-              <div className="font-semibold">{f.title}</div>
-              <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{f.desc}</p>
+              <div className="font-semibold text-base">{f.title}</div>
+              <p className="text-sm text-muted-foreground/70 mt-2 leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
         </div>

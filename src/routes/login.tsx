@@ -25,7 +25,7 @@ function Login() {
     setLoading(true);
     await AuthAPI.login(email, password);
     setLoading(false);
-    nav({ to: "/dashboard" });
+    nav({ to: "/chat" });
   };
 
   return (
@@ -36,13 +36,13 @@ function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 rounded-xl gradient-bg text-white px-4 py-2.5 text-sm font-medium shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow disabled:opacity-60"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-4 py-3 text-sm font-medium hover:bg-primary/90 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? "Signing in…" : "Sign in"} <ArrowRight className="h-4 w-4" />
         </button>
       </form>
       <Divider />
-      <button className="w-full flex items-center justify-center gap-2 rounded-xl glass px-4 py-2.5 text-sm hover:border-primary/40 transition-colors">
+      <button className="w-full flex items-center justify-center gap-2 rounded-xl card px-4 py-3 text-sm hover:border-primary/50 transition-all duration-200">
         <Github className="h-4 w-4" /> Continue with GitHub
       </button>
       <p className="mt-6 text-center text-sm text-muted-foreground">
@@ -69,18 +69,19 @@ export function AuthShell({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <Link to="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="h-10 w-10 rounded-xl gradient-bg grid place-items-center shadow-lg shadow-primary/30">
-            <Scale className="h-5 w-5 text-white" />
+        <Link to="/" className="flex items-center justify-center gap-2.5 mb-8">
+          <div className="h-11 w-11 rounded-lg bg-primary flex items-center justify-center">
+            <Scale className="h-6 w-6 text-white" />
           </div>
           <span className="font-semibold text-lg">LexiAI</span>
         </Link>
-        <div className="glass-strong rounded-3xl p-7 sm:p-8 shadow-2xl shadow-primary/10">
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-          <p className="text-sm text-muted-foreground mt-1.5">{subtitle}</p>
-          <div className="mt-7">{children}</div>
+        <div className="card-elevated rounded-2xl p-8 sm:p-9">
+          <h1 className="text-2xl font-semibold">{title}</h1>
+          <p className="text-sm text-muted-foreground mt-2">{subtitle}</p>
+          <div className="mt-8">{children}</div>
         </div>
       </motion.div>
     </div>
@@ -99,8 +100,8 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      <div className="mt-1.5 flex items-center gap-2 rounded-xl glass px-3 py-2.5 focus-within:border-primary/50 transition-colors">
+      <span className="text-xs font-medium text-muted-foreground/80">{label}</span>
+      <div className="mt-2 flex items-center gap-2.5 rounded-lg card px-3.5 py-3 focus-within:border-primary transition-all duration-150">
         <Icon className="h-4 w-4 text-muted-foreground" />
         <input
           type={type}
@@ -108,7 +109,7 @@ export function Field({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           required
-          className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/60"
+          className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
         />
       </div>
     </label>

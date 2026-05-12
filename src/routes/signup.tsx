@@ -26,7 +26,7 @@ function Signup() {
     setLoading(true);
     await AuthAPI.signup(email, password);
     setLoading(false);
-    nav({ to: "/dashboard" });
+    nav({ to: "/chat" });
   };
 
   return (
@@ -35,16 +35,16 @@ function Signup() {
         <Field icon={User} label="Full name" type="text" value={name} onChange={setName} placeholder="Alex Kim" />
         <Field icon={Mail} label="Work email" type="email" value={email} onChange={setEmail} placeholder="alex@firm.com" />
         <Field icon={Lock} label="Password" type="password" value={password} onChange={setPassword} placeholder="At least 8 characters" />
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 rounded-xl gradient-bg text-white px-4 py-2.5 text-sm font-medium shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow disabled:opacity-60"
-        >
-          {loading ? "Creating account…" : "Create account"} <ArrowRight className="h-4 w-4" />
-        </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-4 py-3 text-sm font-medium hover:bg-primary/90 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading ? "Creating account…" : "Create account"} <ArrowRight className="h-4 w-4" />
+          </button>
       </form>
       <Divider />
-      <button className="w-full flex items-center justify-center gap-2 rounded-xl glass px-4 py-2.5 text-sm hover:border-primary/40 transition-colors">
+      <button className="w-full flex items-center justify-center gap-2 rounded-xl card px-4 py-3 text-sm hover:border-primary/50 transition-all duration-200">
         <Github className="h-4 w-4" /> Sign up with GitHub
       </button>
       <p className="mt-6 text-center text-sm text-muted-foreground">

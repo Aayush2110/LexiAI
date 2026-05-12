@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { UploadCloud, FileText, CheckCircle2, Loader2, X, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DocsAPI } from "@/services/api";
@@ -16,11 +16,12 @@ interface UploadPanelProps {
   files: UploadedFile[];
   onChange: (files: UploadedFile[]) => void;
   onSessionId?: (sessionId: string) => void;
+  currentSessionId?: string;
 }
 
 const ACCEPT = ".pdf,.docx,.txt";
 
-export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) {
+export function UploadPanel({ files, onChange, onSessionId, currentSessionId }: UploadPanelProps) {
   const [drag, setDrag] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,7 +40,8 @@ export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) 
 
       try {
         const fileArray = Array.from(list);
-        const result = await DocsAPI.upload(fileArray, (p) => {
+        console.log('[UploadPanel] Uploading with session ID:', currentSessionId);
+        const result = await DocsAPI.upload(fileArray, currentSessionId, (p) => {
           current = current.map((x) =>
             newOnes.some(n => n.id === x.id) ? { ...x, progress: p, status: p >= 100 ? "processing" : "uploading" } : x
           );
@@ -74,13 +76,13 @@ export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) 
         onChange(current);
       }
     },
-    [files, onChange, onSessionId]
+    [files, onChange, onSessionId, currentSessionId]
   );
 
   const remove = (id: string) => onChange(files.filter((f) => f.id !== id));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -94,9 +96,9 @@ export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) 
         }}
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "relative cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-all",
+          "relative cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-all duration-150",
           drag
-            ? "border-primary bg-primary/10"
+            ? "border-primary bg-primary/5"
             : "border-border hover:border-primary/50 hover:bg-accent/30"
         )}
       >
@@ -110,12 +112,9 @@ export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) 
           handleFiles(e.target.files);
         }}
         />
-        <motion.div
-          animate={{ y: drag ? -4 : 0 }}
-          className="mx-auto h-12 w-12 rounded-2xl gradient-bg grid place-items-center shadow-lg shadow-primary/30 mb-3"
-        >
-          <UploadCloud className="h-6 w-6 text-white" />
-        </motion.div>
+        <div className="mx-auto h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+          <UploadCloud className="h-6 w-6 text-primary" />
+        </div>
         <div className="text-sm font-medium">Drop files or click to upload</div>
         <div className="text-xs text-muted-foreground mt-1">PDF, DOCX, TXT · up to 25 MB each</div>
       </div>
@@ -123,27 +122,20 @@ export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) 
       <div className="space-y-2">
         <AnimatePresence initial={false}>
           {files.length === 0 ? (
-            <motion.div
+            <div
               key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="glass rounded-2xl p-5 text-center"
+              className="card p-4 text-center"
             >
-              <FileText className="h-6 w-6 mx-auto text-muted-foreground/60 mb-2" />
+              <FileText className="h-5 w-5 mx-auto text-muted-foreground mb-2" />
               <div className="text-xs text-muted-foreground">No documents yet — upload to begin.</div>
-            </motion.div>
+            </div>
           ) : (
             files.map((f) => (
-              <motion.div
+              <div
                 key={f.id}
-                layout
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                className="glass rounded-2xl p-3 flex items-center gap-3"
+                className="card p-3 flex items-center gap-3"
               >
-                <div className="h-10 w-10 shrink-0 rounded-xl bg-primary/10 border border-primary/20 grid place-items-center text-primary">
+                <div className="h-9 w-9 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <FileText className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -151,9 +143,9 @@ export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) 
                     <div className="text-sm font-medium truncate">{f.name}</div>
                     <button
                       onClick={() => remove(f.id)}
-                      className="h-6 w-6 grid place-items-center rounded-md hover:bg-accent text-muted-foreground"
+                      className="h-6 w-6 flex items-center justify-center rounded-lg hover:bg-accent text-muted-foreground transition-colors duration-150"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3.5 w-3.5" />
                     </button>
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
@@ -162,16 +154,15 @@ export function UploadPanel({ files, onChange, onSessionId }: UploadPanelProps) 
                     <StatusPill status={f.status} />
                   </div>
                   {(f.status === "uploading" || f.status === "processing") && (
-                    <div className="mt-2 h-1 w-full rounded-full bg-muted overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${f.status === "processing" ? 100 : f.progress}%` }}
-                        className="h-full gradient-bg"
+                    <div className="mt-2 h-1 w-full rounded-full bg-accent overflow-hidden">
+                      <div
+                        style={{ width: `${f.status === "processing" ? 100 : f.progress}%` }}
+                        className="h-full bg-primary transition-all duration-300"
                       />
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </div>
             ))
           )}
         </AnimatePresence>

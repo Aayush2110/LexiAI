@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Sidebar, type ChatItem, type DocItem } from "@/components/lexi/Sidebar";
 import { Navbar } from "@/components/lexi/Navbar";
-import { ChatAPI } from "@/services/api";
+import { useChatContext } from "@/contexts/ChatContext";
 
 interface MainLayoutProps {
   title?: string;
@@ -11,6 +11,8 @@ interface MainLayoutProps {
   activeChatId?: string;
   onNewChat?: () => void;
   onSelectChat?: (id: string) => void;
+  onDeleteChat?: (id: string) => void;
+  onRenameChat?: (id: string, newTitle: string) => void;
   rightSlot?: React.ReactNode;
   children: React.ReactNode;
 }
@@ -23,59 +25,63 @@ export function MainLayout({
   activeChatId,
   onNewChat,
   onSelectChat,
+  onDeleteChat,
+  onRenameChat,
   rightSlot,
   children,
 }: MainLayoutProps) {
   const [open, setOpen] = useState(false);
-  const [chats, setChats] = useState<ChatItem[]>(propChats || []);
-  const [loading, setLoading] = useState(false);
-
-  // Load chats from MongoDB on mount
-  useEffect(() => {
-    loadChats();
-  }, []);
-
-  // Update chats if prop changes
-  useEffect(() => {
-    if (propChats) {
-      setChats(propChats);
-    }
-  }, [propChats]);
-
-  const loadChats = async () => {
-    try {
-      setLoading(true);
-      const response = await ChatAPI.listChats();
-      const formattedChats: ChatItem[] = response.chats.map((chat: any) => ({
-        id: chat.session_id,
-        title: chat.title,
-        updatedAt: new Date(chat.updated_at).toISOString(),
-        messageCount: chat.message_count,
-      }));
-      setChats(formattedChats);
-    } catch (error) {
-      console.error('[MainLayout] Error loading chats:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
+  // Use ChatContext for chat data
+  const { chats: contextChats, refreshChats } = useChatContext();
+  
+  // Use context chats if no prop chats provided
+  const chats = propChats || contextChats.map(chat => ({
+    id: chat.id,
+    title: chat.title,
+    updatedAt: chat.updatedAt,
+    messageCount: chat.messageCount,
+  }));
 
   const handleNewChat = async () => {
     try {
-      // Call parent onNewChat first (it creates the chat)
       if (onNewChat) {
         await onNewChat();
       }
-      
-      // Refresh chat list after creation
-      await loadChats();
+      // Refresh from context
+      await refreshChats();
     } catch (error) {
       console.error('[MainLayout] Error creating chat:', error);
     }
   };
 
   const handleSelectChat = (id: string) => {
+    console.log('[MainLayout] Selecting chat:', id);
     onSelectChat?.(id);
+  };
+
+  const handleDeleteChat = async (id: string) => {
+    try {
+      if (onDeleteChat) {
+        await onDeleteChat(id);
+      }
+      // Refresh from context
+      await refreshChats();
+    } catch (error) {
+      console.error('[MainLayout] Error deleting chat:', error);
+    }
+  };
+
+  const handleRenameChat = async (id: string, newTitle: string) => {
+    try {
+      if (onRenameChat) {
+        await onRenameChat(id, newTitle);
+      }
+      // Refresh from context
+      await refreshChats();
+    } catch (error) {
+      console.error('[MainLayout] Error renaming chat:', error);
+    }
   };
 
   useEffect(() => {
@@ -95,6 +101,8 @@ export function MainLayout({
         activeChatId={activeChatId}
         onNewChat={handleNewChat}
         onSelectChat={handleSelectChat}
+        onDeleteChat={handleDeleteChat}
+        onRenameChat={handleRenameChat}
       />
 
       <div className="flex-1 flex flex-col min-w-0">
