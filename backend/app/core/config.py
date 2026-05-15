@@ -71,6 +71,18 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
     
+    # Email Configuration
+    EMAIL_HOST: str = "smtp.gmail.com"
+    EMAIL_PORT: int = 587
+    EMAIL_USER: str = ""
+    EMAIL_PASSWORD: str = ""
+    EMAIL_FROM: str = ""
+    EMAIL_FROM_NAME: str = "LexiAI"
+    
+    # Password Reset
+    RESET_TOKEN_EXPIRE_MINUTES: int = 30
+    FRONTEND_URL: str = "http://localhost:8080"
+    
     # Computed Properties
     @property
     def cors_origins_list(self) -> List[str]:

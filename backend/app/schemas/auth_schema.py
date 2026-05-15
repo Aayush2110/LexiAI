@@ -124,3 +124,69 @@ class MessageResponse(BaseModel):
                 "message": "Operation successful"
             }
         }
+
+
+class ForgotPasswordRequest(BaseModel):
+    """Forgot password request"""
+    email: EmailStr = Field(..., description="Email address")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "john@example.com"
+            }
+        }
+
+
+class ResetPasswordRequest(BaseModel):
+    """Reset password request"""
+    token: str = Field(..., description="Password reset token")
+    new_password: str = Field(..., min_length=8, max_length=100, description="New password")
+    
+    @validator('new_password')
+    def validate_password(cls, v):
+        """Validate password strength"""
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        if not any(c.isupper() for c in v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        if not any(c.islower() for c in v):
+            raise ValueError('Password must contain at least one lowercase letter')
+        if not any(c.isdigit() for c in v):
+            raise ValueError('Password must contain at least one digit')
+        return v
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                "new_password": "NewSecurePass123"
+            }
+        }
+
+
+class VerifyOTPRequest(BaseModel):
+    """Verify OTP request"""
+    email: EmailStr = Field(..., description="Email address")
+    otp: str = Field(..., min_length=6, max_length=6, description="6-digit OTP code")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "john@example.com",
+                "otp": "123456"
+            }
+        }
+
+
+class ResendOTPRequest(BaseModel):
+    """Resend OTP request"""
+    email: EmailStr = Field(..., description="Email address")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "john@example.com"
+            }
+        }
+

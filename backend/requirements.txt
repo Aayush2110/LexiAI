@@ -20,6 +20,10 @@ pydantic==2.10.2
 pydantic-settings==2.6.1
 loguru==0.7.2
 
+# Email Service
+aiosmtplib==3.0.2
+email-validator==2.2.0
+
 # Note: RAG dependencies (langchain, chromadb, sentence-transformers) are commented out
 # to avoid numpy compilation issues on Python 3.13
 # The authentication system works independently of these packages
