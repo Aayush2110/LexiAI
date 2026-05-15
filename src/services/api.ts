@@ -114,8 +114,35 @@ export const DocsAPI = {
 };
 
 export const AuthAPI = {
-  login: async (email: string, _password: string) => ({ token: "demo", email }),
-  signup: async (email: string, _password: string) => ({ token: "demo", email }),
+  login: async (email: string, password: string, rememberMe: boolean = false) => {
+    const res = await api.post("/auth/login", { email, password, remember_me: rememberMe });
+    return res.data;
+  },
+  
+  signup: async (name: string, email: string, password: string) => {
+    const res = await api.post("/auth/signup", { name, email, password });
+    return res.data;
+  },
+  
+  googleAuth: async (token: string) => {
+    const res = await api.post("/auth/google", { token });
+    return res.data;
+  },
+  
+  me: async () => {
+    const res = await api.get("/auth/me");
+    return res.data;
+  },
+  
+  logout: async () => {
+    const res = await api.post("/auth/logout");
+    return res.data;
+  },
+  
+  refreshToken: async () => {
+    const res = await api.post("/auth/refresh");
+    return res.data;
+  },
 };
 
 export default api;

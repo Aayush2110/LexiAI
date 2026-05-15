@@ -1,8 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Scale, Mail, Lock, ArrowRight, Github } from "lucide-react";
+import { Scale, Mail, Lock, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { AuthAPI } from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -16,23 +18,117 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
   const nav = useNavigate();
+  const { login, googleLogin, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    nav({ to: "/chat" });
+  }
+
+  const handleGoogleSuccess = async (token: string) => {
+    try {
+      setLoading(true);
+      setError("");
+      await googleLogin(token);
+      toast.success("Welcome back!");
+      nav({ to: "/chat" });
+    } catch (err: any) {
+      const errorMsg = err.message || "Google authentication failed";
+      setError(errorMsg);
+      toast.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const { buttonRef, isConfigured } = useGoogleAuth({
+    onSuccess: handleGoogleSuccess,
+    onError: (err) => {
+      console.error("Google auth error:", err);
+      toast.error("Google authentication failed");
+    },
+  });
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await AuthAPI.login(email, password);
-    setLoading(false);
-    nav({ to: "/chat" });
+    setError("");
+
+    try {
+      await login(email, password, rememberMe);
+      toast.success("Welcome back!");
+      nav({ to: "/chat" });
+    } catch (err: any) {
+      const errorMsg = err.message || "Login failed. Please check your credentials.";
+      setError(errorMsg);
+      toast.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <AuthShell title="Welcome back" subtitle="Log in to continue with LexiAI.">
       <form onSubmit={submit} className="space-y-4">
-        <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="alex@firm.com" />
-        <Field icon={Lock} label="Password" type="password" value={password} onChange={setPassword} placeholder="••••••••" />
+        {error && (
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+        
+        <Field 
+          icon={Mail} 
+          label="Email" 
+          type="email" 
+          value={email} 
+          onChange={setEmail} 
+          placeholder="alex@firm.com"
+          disabled={loading}
+        />
+        
+        <div className="relative">
+          <Field 
+            icon={Lock} 
+            label="Password" 
+            type={showPassword ? "text" : "password"}
+            value={password} 
+            onChange={setPassword} 
+            placeholder="••••••••"
+            disabled={loading}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="rounded border-border"
+              disabled={loading}
+            />
+            <span className="text-sm text-muted-foreground">Remember me</span>
+          </label>
+          <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+            Forgot password?
+          </Link>
+        </div>
+
         <button
           type="submit"
           disabled={loading}
@@ -41,10 +137,14 @@ function Login() {
           {loading ? "Signing in…" : "Sign in"} <ArrowRight className="h-4 w-4" />
         </button>
       </form>
-      <Divider />
-      <button className="w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm hover:border-muted-foreground/50 transition-all duration-200">
-        <Github className="h-4 w-4" /> Continue with GitHub
-      </button>
+
+      {isConfigured && (
+        <>
+          <Divider />
+          <div ref={buttonRef} className="w-full flex justify-center" />
+        </>
+      )}
+
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Don't have an account?{" "}
         <Link to="/signup" className="text-primary hover:underline">Sign up</Link>
@@ -88,7 +188,7 @@ export function AuthShell({
 }
 
 export function Field({
-  icon: Icon, label, type, value, onChange, placeholder,
+  icon: Icon, label, type, value, onChange, placeholder, disabled,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
@@ -96,6 +196,7 @@ export function Field({
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  disabled?: boolean;
 }) {
   return (
     <label className="block">
@@ -107,8 +208,9 @@ export function Field({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
+          disabled={disabled}
           required
-          className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
         />
       </div>
     </label>

@@ -9,6 +9,7 @@ import { ChatAPI } from "@/services/api";
 import { motion } from "framer-motion";
 import { FileUp } from "lucide-react";
 import { useChatContext } from "@/contexts/ChatContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export const Route = createFileRoute("/chat")({
   head: () => ({
@@ -21,6 +22,14 @@ export const Route = createFileRoute("/chat")({
 });
 
 function ChatPage() {
+  return (
+    <ProtectedRoute>
+      <ChatPageContent />
+    </ProtectedRoute>
+  );
+}
+
+function ChatPageContent() {
   const {
     chats,
     currentChat,

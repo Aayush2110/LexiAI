@@ -1,3 +1,6 @@
+# Minimal requirements for Authentication System Only
+# Use this if you're having issues with Python 3.13 and numpy compilation
+
 # Core Framework
 fastapi==0.115.0
 uvicorn[standard]==0.32.0
@@ -19,7 +22,3 @@ google-auth-httplib2==0.2.0
 pydantic==2.10.2
 pydantic-settings==2.6.1
 loguru==0.7.2
-
-# Note: RAG dependencies (langchain, chromadb, sentence-transformers) are commented out
-# to avoid numpy compilation issues on Python 3.13
-# The authentication system works independently of these packages

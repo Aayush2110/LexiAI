@@ -62,6 +62,15 @@ class Settings(BaseSettings):
     # ChromaDB Configuration
     CHROMA_PERSIST_DIR: str = "./data/chromadb"
     
+    # JWT Authentication
+    JWT_SECRET_KEY: str = "your-secret-key-change-in-production-min-32-chars"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    
+    # Google OAuth
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    
     # Computed Properties
     @property
     def cors_origins_list(self) -> List[str]:
