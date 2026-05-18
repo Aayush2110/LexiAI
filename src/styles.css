@@ -162,6 +162,17 @@
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.6;
   }
+  
+  /* Remove white background from autofill */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-text-fill-color: var(--color-foreground) !important;
+    background-color: transparent !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
 }
 
 @layer utilities {
@@ -230,5 +241,12 @@
   
   .light .input-focus:focus {
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Sonner toast close button positioning */
+  [data-sonner-toast] [data-close-button] {
+    left: auto !important;
+    right: 8px !important;
+    top: 8px !important;
   }
 }

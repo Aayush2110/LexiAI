@@ -4,7 +4,7 @@ Authentication Schemas
 Pydantic models for authentication requests and responses.
 """
 
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, TYPE_CHECKING
 from datetime import datetime
 
@@ -18,7 +18,8 @@ class SignupRequest(BaseModel):
     email: EmailStr = Field(..., description="Email address")
     password: str = Field(..., min_length=8, max_length=100, description="Password (min 8 characters)")
     
-    @validator('password')
+    @field_validator('password')
+    @classmethod
     def validate_password(cls, v):
         """Validate password strength"""
         if len(v) < 8:
@@ -77,6 +78,7 @@ class UserResponse(BaseModel):
     profile_picture: Optional[str] = Field(None, description="Profile picture URL")
     auth_provider: str = Field(..., description="Authentication provider (email/google)")
     created_at: datetime = Field(..., description="Account creation timestamp")
+    organization: Optional[str] = Field(None, description="Organization name")
     
     class Config:
         json_schema_extra = {
@@ -86,7 +88,8 @@ class UserResponse(BaseModel):
                 "email": "john@example.com",
                 "profile_picture": "https://lh3.googleusercontent.com/a/...",
                 "auth_provider": "google",
-                "created_at": "2024-01-15T10:30:00"
+                "created_at": "2024-01-15T10:30:00",
+                "organization": "Acme Corp"
             }
         }
 
@@ -143,7 +146,8 @@ class ResetPasswordRequest(BaseModel):
     token: str = Field(..., description="Password reset token")
     new_password: str = Field(..., min_length=8, max_length=100, description="New password")
     
-    @validator('new_password')
+    @field_validator('new_password')
+    @classmethod
     def validate_password(cls, v):
         """Validate password strength"""
         if len(v) < 8:
@@ -189,4 +193,19 @@ class ResendOTPRequest(BaseModel):
                 "email": "john@example.com"
             }
         }
+
+
+class UpdateProfileRequest(BaseModel):
+    """Update user profile request"""
+    name: Optional[str] = Field(None, min_length=1, max_length=100, description="Full name")
+    organization: Optional[str] = Field(None, max_length=200, description="Organization name")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "John Doe",
+                "organization": "Acme Corp"
+            }
+        }
+
 

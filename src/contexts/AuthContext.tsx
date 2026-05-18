@@ -8,6 +8,7 @@ export interface User {
   profile_picture?: string;
   auth_provider: 'email' | 'google';
   created_at: string;
+  organization?: string;
 }
 
 interface AuthContextType {
@@ -18,6 +19,8 @@ interface AuthContextType {
   signup: (name: string, email: string, password: string) => Promise<void>;
   googleLogin: (googleToken: string) => Promise<void>;
   logout: () => void;
+  setAuth: (token: string, user: User) => void;
+  updateProfile: (data: { name?: string; organization?: string }) => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -68,6 +71,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       localStorage.setItem('lexi_token', response.access_token);
       localStorage.setItem('lexi_user', JSON.stringify(response.user));
+      
+      // Trigger chat reload by updating user state
+      console.log('[AuthContext] User logged in:', response.user.email);
     } catch (error: any) {
       console.error('Login failed:', error);
       throw new Error(error?.detail || 'Login failed. Please check your credentials.');
@@ -83,6 +89,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       localStorage.setItem('lexi_token', response.access_token);
       localStorage.setItem('lexi_user', JSON.stringify(response.user));
+      
+      // Trigger chat reload by updating user state
+      console.log('[AuthContext] User signed up:', response.user.email);
     } catch (error: any) {
       console.error('Signup failed:', error);
       throw new Error(error?.detail || 'Signup failed. Please try again.');
@@ -98,6 +107,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       localStorage.setItem('lexi_token', response.access_token);
       localStorage.setItem('lexi_user', JSON.stringify(response.user));
+      
+      // Trigger chat reload by updating user state
+      console.log('[AuthContext] User logged in with Google:', response.user.email);
     } catch (error: any) {
       console.error('Google login failed:', error);
       throw new Error(error?.detail || 'Google authentication failed. Please try again.');
@@ -105,13 +117,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
+    // Clear auth state
     setToken(null);
     setUser(null);
-    localStorage.removeItem('lexi_token');
-    localStorage.removeItem('lexi_user');
+    
+    // Clear all storage
+    localStorage.clear();
+    sessionStorage.clear();
     
     // Call logout endpoint for logging purposes
     AuthAPI.logout().catch(console.error);
+    
+    // Note: Navigation to /login is handled by the component
+    // that calls logout (usually redirects after logout)
+  };
+
+  const setAuth = (newToken: string, newUser: User) => {
+    setToken(newToken);
+    setUser(newUser);
+    localStorage.setItem('lexi_token', newToken);
+    localStorage.setItem('lexi_user', JSON.stringify(newUser));
+    
+    // Trigger chat reload by updating user state
+    console.log('[AuthContext] Auth set for user:', newUser.email);
+  };
+
+  const updateProfile = async (data: { name?: string; organization?: string }) => {
+    try {
+      console.log('[AuthContext] Updating profile with data:', data);
+      const updatedUser = await AuthAPI.updateProfile(data);
+      console.log('[AuthContext] Profile update response:', updatedUser);
+      setUser(updatedUser);
+      localStorage.setItem('lexi_user', JSON.stringify(updatedUser));
+      console.log('[AuthContext] Profile updated successfully:', updatedUser.email);
+    } catch (error: any) {
+      console.error('[AuthContext] Profile update failed:', error);
+      throw error;
+    }
   };
 
   const value: AuthContextType = {
@@ -122,6 +164,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signup,
     googleLogin,
     logout,
+    setAuth,
+    updateProfile,
     isAuthenticated: !!token && !!user,
   };
 

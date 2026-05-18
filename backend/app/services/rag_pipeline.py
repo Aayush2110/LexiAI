@@ -107,6 +107,13 @@ class RAGPipeline:
             logger.info("Step 3: Creating vector store...")
             vectorstore = vector_store_service.create_vectorstore(chunks, session_id)
             
+            # Step 4: Index for BM25 (if hybrid search enabled)
+            if settings.USE_HYBRID_SEARCH:
+                logger.info("Step 4: Indexing for BM25...")
+                from app.services.hybrid_retriever import hybrid_retriever
+                hybrid_retriever.index_documents_for_bm25(chunks)
+                logger.info("BM25 indexing completed")
+            
             # Calculate total pages from documents
             total_pages = sum(doc.metadata.get('total_pages', 1) for doc in documents)
             

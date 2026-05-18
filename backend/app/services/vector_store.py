@@ -7,7 +7,7 @@ Manages ChromaDB vector database for storing and retrieving embeddings.
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 from typing import List, Optional
-from langchain.schema import Document
+from langchain_core.documents import Document
 from langchain_community.vectorstores import Chroma
 from loguru import logger
 from app.core.config import settings

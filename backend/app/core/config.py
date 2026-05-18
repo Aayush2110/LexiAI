@@ -51,6 +51,24 @@ class Settings(BaseSettings):
     TOP_K_RETRIEVAL: int = 4  # Number of relevant chunks to retrieve
     EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
     
+    # Hybrid Search Configuration
+    USE_HYBRID_SEARCH: bool = True  # Enable hybrid search (semantic + BM25)
+    USE_RERANKING: bool = True  # Enable reranking with cross-encoder
+    RETRIEVAL_K: int = 20  # Number of docs to retrieve before reranking
+    SEMANTIC_WEIGHT: float = 0.5  # Weight for semantic search (0-1)
+    BM25_WEIGHT: float = 0.5  # Weight for BM25 search (0-1)
+    RERANKER_MODEL: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    
+    # Query Enhancement Configuration
+    USE_QUERY_ENHANCEMENT: bool = True  # Enable query preprocessing and expansion
+    EXPAND_QUERIES: bool = True  # Generate query variations
+    
+    # Context Compression Configuration
+    USE_CONTEXT_COMPRESSION: bool = True  # Enable context compression
+    RELEVANCE_THRESHOLD: float = 0.3  # Minimum relevance score for sentences
+    MAX_SENTENCES_PER_DOC: int = 10  # Maximum sentences per document
+    MAX_CONTEXT_TOKENS: int = 2000  # Maximum tokens for LLM context
+    
     # LLM Settings
     LLM_TEMPERATURE: float = 0.1  # Lower = more deterministic responses
     LLM_MAX_TOKENS: int = 500  # Maximum response length

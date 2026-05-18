@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { ChatAPI } from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
 import type { Message } from '@/components/lexi/MessageBubble';
 
 export interface Chat {
@@ -42,9 +43,17 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user, isAuthenticated } = useAuth();
 
   // Load all chats from backend
   const loadChats = useCallback(async () => {
+    if (!isAuthenticated) {
+      // Clear chats if not authenticated
+      setChats([]);
+      setCurrentChat(null);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -67,7 +76,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   // Create new chat
   const createChat = useCallback(async () => {
@@ -208,10 +217,17 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     await loadChats();
   }, [loadChats]);
 
-  // Load chats on mount
+  // Load chats on mount and when user changes
   useEffect(() => {
-    loadChats();
-  }, [loadChats]);
+    if (isAuthenticated && user) {
+      console.log('[ChatContext] User authenticated, loading chats for:', user.email);
+      loadChats();
+    } else {
+      console.log('[ChatContext] User not authenticated, clearing chats');
+      setChats([]);
+      setCurrentChat(null);
+    }
+  }, [isAuthenticated, user?.id, loadChats]);
 
   const value: ChatContextType = {
     chats,

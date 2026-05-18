@@ -83,35 +83,47 @@ function Login() {
           </div>
         )}
         
-        <Field 
-          icon={Mail} 
-          label="Email" 
-          type="email" 
-          value={email} 
-          onChange={setEmail} 
-          placeholder="alex@firm.com"
-          disabled={loading}
-        />
+        <label className="block">
+          <span className="text-xs font-medium text-muted-foreground">Email</span>
+          <div className="mt-2 flex items-center gap-2.5 rounded-lg border border-border bg-transparent px-3.5 py-3 focus-within:border-foreground/30 transition-all duration-150">
+            <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="alex@firm.com"
+              disabled={loading}
+              required
+              autoComplete="email"
+              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
+            />
+          </div>
+        </label>
         
-        <div className="relative">
-          <Field 
-            icon={Lock} 
-            label="Password" 
-            type={showPassword ? "text" : "password"}
-            value={password} 
-            onChange={setPassword} 
-            placeholder="••••••••"
-            disabled={loading}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
-            tabIndex={-1}
-          >
-            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </button>
-        </div>
+        <label className="block">
+          <span className="text-xs font-medium text-muted-foreground">Password</span>
+          <div className="mt-2 relative flex items-center gap-2.5 rounded-lg border border-border bg-transparent px-3.5 py-3 focus-within:border-foreground/30 transition-all duration-150">
+            <Lock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              disabled={loading}
+              required
+              autoComplete="current-password"
+              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50 pr-8 autofill:bg-transparent autofill:text-foreground [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:text-foreground [&:-webkit-autofill]:[-webkit-text-fill-color:inherit] [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_1000px_transparent_inset]"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3.5 text-muted-foreground hover:text-foreground transition-colors"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+        </label>
 
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-2 cursor-pointer">
@@ -201,8 +213,8 @@ export function Field({
   return (
     <label className="block">
       <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      <div className="mt-2 flex items-center gap-2.5 rounded-lg border border-border bg-background px-3.5 py-3 focus-within:border-foreground/30 transition-all duration-150">
-        <Icon className="h-4 w-4 text-muted-foreground" />
+      <div className="mt-2 flex items-center gap-2.5 rounded-lg border border-border bg-transparent px-3.5 py-3 focus-within:border-foreground/30 transition-all duration-150">
+        <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
         <input
           type={type}
           value={value}
@@ -210,7 +222,8 @@ export function Field({
           placeholder={placeholder}
           disabled={disabled}
           required
-          className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
+          autoComplete={type === "password" ? "current-password" : "email"}
+          className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50 autofill:bg-transparent autofill:text-foreground [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:text-foreground [&:-webkit-autofill]:[-webkit-text-fill-color:inherit] [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_1000px_transparent_inset]"
         />
       </div>
     </label>

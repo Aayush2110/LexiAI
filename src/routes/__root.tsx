@@ -79,7 +79,7 @@ function RootComponent() {
       <AuthProvider>
         <ChatProvider>
           <Outlet />
-          <Toaster position="top-right" richColors />
+          <Toaster position="top-right" richColors closeButton />
         </ChatProvider>
       </AuthProvider>
     </ThemeProvider>

@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Mail, ArrowRight, ArrowLeft } from "lucide-react";
+import { Mail, ArrowRight, ArrowLeft, AlertCircle } from "lucide-react";
 import { AuthShell, Field } from "./login";
 import { toast } from "sonner";
+import api from "@/services/api";
 
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
@@ -18,17 +19,24 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await api.post("/auth/forgot-password", { email });
       setSent(true);
       setLoading(false);
-      toast.success("Password reset instructions sent to your email");
-    }, 1000);
+      toast.success(response.data.message || "Password reset email sent!");
+    } catch (err: any) {
+      const errorMsg = err?.detail || err?.message || "Failed to send reset email";
+      setError(errorMsg);
+      toast.error(errorMsg);
+      setLoading(false);
+    }
   };
 
   if (sent) {
@@ -70,6 +78,13 @@ function ForgotPassword() {
       subtitle="Enter your email and we'll send you reset instructions."
     >
       <form onSubmit={submit} className="space-y-4">
+        {error && (
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+        
         <Field 
           icon={Mail} 
           label="Email" 

@@ -18,7 +18,7 @@ import os
 from loguru import logger
 import fitz  # PyMuPDF
 from docx import Document as DocxDocument
-from langchain.schema import Document
+from langchain_core.documents import Document
 from app.utils.helpers import clean_text
 
 

@@ -31,13 +31,15 @@ export const ChatAPI = {
     return res.data;
   },
   
-  createChat: async (userId: string = "default_user") => {
-    const res = await api.post("/chats", { user_id: userId });
+  createChat: async () => {
+    // user_id is now extracted from JWT token on backend
+    const res = await api.post("/chats", {});
     return res.data;
   },
   
-  listChats: async (userId: string = "default_user") => {
-    const res = await api.get("/chats", { params: { user_id: userId } });
+  listChats: async () => {
+    // user_id is now extracted from JWT token on backend
+    const res = await api.get("/chats");
     return res.data;
   },
   
@@ -131,6 +133,11 @@ export const AuthAPI = {
   
   me: async () => {
     const res = await api.get("/auth/me");
+    return res.data;
+  },
+  
+  updateProfile: async (data: { name?: string; organization?: string }) => {
+    const res = await api.put("/auth/me", data);
     return res.data;
   },
   

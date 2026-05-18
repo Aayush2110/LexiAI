@@ -24,6 +24,16 @@ loguru==0.7.2
 aiosmtplib==3.0.2
 email-validator==2.2.0
 
-# Note: RAG dependencies (langchain, chromadb, sentence-transformers) are commented out
-# to avoid numpy compilation issues on Python 3.13
-# The authentication system works independently of these packages
+# RAG Dependencies
+langchain==0.1.0
+langchain-community==0.0.13
+langchain-google-genai==0.0.6
+chromadb==0.4.22
+sentence-transformers==2.3.1
+pypdf==3.17.4
+python-docx==1.1.0
+faiss-cpu==1.7.4
+
+# Enhanced RAG - Hybrid Search & Reranking
+rank-bm25==0.2.2  # BM25 keyword search
+sentence-transformers>=2.3.1  # For cross-encoder reranking

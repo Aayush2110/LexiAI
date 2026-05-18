@@ -24,7 +24,8 @@ from app.schemas.auth_schema import (
     ForgotPasswordRequest,
     ResetPasswordRequest,
     VerifyOTPRequest,
-    ResendOTPRequest
+    ResendOTPRequest,
+    UpdateProfileRequest
 )
 from app.services.database import get_users_collection
 from app.utils.password_handler import hash_password, verify_password
@@ -177,7 +178,8 @@ async def verify_otp(request: VerifyOTPRequest):
             email=user_doc["email"],
             profile_picture=user_doc["profile_picture"],
             auth_provider=user_doc["auth_provider"],
-            created_at=user_doc["created_at"]
+            created_at=user_doc["created_at"],
+            organization=user_doc.get("organization")
         )
         
         logger.info(f"New user registered and verified: {signup_data['email']}")
@@ -300,7 +302,8 @@ async def login(request: LoginRequest):
             email=user["email"],
             profile_picture=user.get("profile_picture"),
             auth_provider=user.get("auth_provider", "email"),
-            created_at=user["created_at"]
+            created_at=user["created_at"],
+            organization=user.get("organization")
         )
         
         logger.info(f"User logged in: {request.email}")
@@ -414,7 +417,8 @@ async def google_auth(request: GoogleAuthRequest):
             email=user["email"],
             profile_picture=user.get("profile_picture"),
             auth_provider=user.get("auth_provider", "google"),
-            created_at=user["created_at"]
+            created_at=user["created_at"],
+            organization=user.get("organization")
         )
         
         logger.info(f"Google user authenticated: {email}")
@@ -448,7 +452,68 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
         email=current_user["email"],
         profile_picture=current_user.get("profile_picture"),
         auth_provider=current_user.get("auth_provider", "email"),
-        created_at=current_user["created_at"]
+        created_at=current_user["created_at"],
+        organization=current_user.get("organization")
+    )
+
+
+@router.put("/me", response_model=UserResponse)
+async def update_user_profile(
+    request: UpdateProfileRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Update current user profile
+    
+    Protected route - requires valid JWT token
+    """
+    users_collection = get_users_collection()
+    
+    # Build update data - only include fields that are provided
+    update_data = {}
+    if request.name is not None and request.name.strip():
+        update_data["name"] = request.name.strip()
+    if request.organization is not None:
+        update_data["organization"] = request.organization.strip() if request.organization else ""
+    
+    if not update_data:
+        # Return current user if no changes
+        return UserResponse(
+            id=str(current_user["_id"]),
+            name=current_user["name"],
+            email=current_user["email"],
+            profile_picture=current_user.get("profile_picture"),
+            auth_provider=current_user.get("auth_provider", "email"),
+            created_at=current_user["created_at"],
+            organization=current_user.get("organization")
+        )
+    
+    # Update user in database
+    from bson import ObjectId
+    result = users_collection.update_one(
+        {"_id": ObjectId(current_user["_id"])},
+        {"$set": update_data}
+    )
+    
+    # Fetch updated user
+    updated_user = users_collection.find_one({"_id": ObjectId(current_user["_id"])})
+    
+    if not updated_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    logger.info(f"User profile updated: {updated_user['email']}")
+    
+    return UserResponse(
+        id=str(updated_user["_id"]),
+        name=updated_user["name"],
+        email=updated_user["email"],
+        profile_picture=updated_user.get("profile_picture"),
+        auth_provider=updated_user.get("auth_provider", "email"),
+        created_at=updated_user["created_at"],
+        organization=updated_user.get("organization")
     )
 
 
@@ -481,7 +546,8 @@ async def refresh_token(current_user: dict = Depends(get_current_user)):
         email=current_user["email"],
         profile_picture=current_user.get("profile_picture"),
         auth_provider=current_user.get("auth_provider", "email"),
-        created_at=current_user["created_at"]
+        created_at=current_user["created_at"],
+        organization=current_user.get("organization")
     )
     
     return AuthResponse(
