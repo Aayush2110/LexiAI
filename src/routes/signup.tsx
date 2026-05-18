@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGoogleAuth } from "@/hooks/useGoogleAuth";
@@ -30,9 +30,11 @@ function Signup() {
   const [error, setError] = useState("");
 
   // Redirect if already authenticated
-  if (isAuthenticated) {
-    nav({ to: "/chat" });
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      nav({ to: "/chat", replace: true });
+    }
+  }, [isAuthenticated, nav]);
 
   const handleGoogleSuccess = async (token: string) => {
     try {

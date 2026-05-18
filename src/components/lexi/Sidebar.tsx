@@ -1,15 +1,11 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import {
   Plus,
   MessageSquare,
-  FileText,
-  Settings,
   LogOut,
-  Sparkles,
   Scale,
   X,
-  FolderOpen,
   Search,
   Trash2,
   Edit2,
@@ -17,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useMemo } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface ChatItem { 
   id: string; 
@@ -43,10 +40,7 @@ interface SidebarProps {
   onRenameChat?: (id: string, newTitle: string) => void;
 }
 
-const navItems = [
-  { to: "/chat", label: "AI Assistant", icon: Sparkles },
-  { to: "/settings", label: "Settings", icon: Settings },
-] as const;
+const navItems = [] as const;
 
 export function Sidebar({
   open,
@@ -60,9 +54,27 @@ export function Sidebar({
   onRenameChat,
 }: SidebarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
+
+  // Get user initials for avatar
+  const getUserInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    navigate({ to: '/login' });
+  };
 
   // Group chats by time
   const groupedChats = useMemo(() => {
@@ -147,8 +159,23 @@ export function Sidebar({
         {/* Logo */}
         <div className="flex items-center justify-between px-4 h-14 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
-              <Scale className="h-4 w-4" />
+            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="text-primary-foreground"
+              >
+                <line x1="12" y1="3" x2="12" y2="21"></line>
+                <path d="m16 16 3-11 3 11c0 1.66-1.34 3-3 3s-3-1.34-3-3Z"></path>
+                <path d="m2 16 3-11 3 11c0 1.66-1.34 3-3 3s-3-1.34-3-3Z"></path>
+              </svg>
             </div>
             <div>
               <div className="font-semibold text-sm">LexiAI</div>
@@ -200,15 +227,20 @@ export function Sidebar({
                 {group.chats.map((c) => (
                   <div
                     key={c.id}
+                    onClick={() => {
+                      if (editingChatId !== c.id) {
+                        onSelectChat(c.id);
+                      }
+                    }}
                     className={cn(
-                      "group relative w-full text-left flex items-center gap-2 rounded-lg px-2 py-2 text-sm",
+                      "group relative w-full text-left flex items-center gap-2 rounded-lg px-2 py-2 text-sm cursor-pointer transition-colors duration-150",
                       c.id === activeChatId
                         ? "bg-accent text-foreground"
                         : "hover:bg-accent/50 text-muted-foreground hover:text-foreground"
                     )}
                   >
                     {editingChatId === c.id ? (
-                      <div className="flex-1 flex items-center gap-1">
+                      <div className="flex-1 flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                         <input
                           type="text"
                           value={editTitle}
@@ -235,16 +267,11 @@ export function Sidebar({
                       </div>
                     ) : (
                       <>
-                        <button
-                          onClick={() => {
-                            onSelectChat(c.id);
-                          }}
-                          className="flex-1 flex items-center gap-2 min-w-0"
-                        >
+                        <div className="flex-1 flex items-center gap-2 min-w-0">
                           <MessageSquare className="h-3.5 w-3.5 shrink-0" />
                           <span className="truncate text-xs">{c.title}</span>
-                        </button>
-                        <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100">
+                        </div>
+                        <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
                           {onRenameChat && (
                             <button
                               onClick={(e) => {
@@ -274,70 +301,33 @@ export function Sidebar({
               </Section>
             ))
           )}
-
-          {/* Documents */}
-          <Section icon={FolderOpen} title="Documents">
-            {docs.length === 0 ? (
-              <EmptyHint text="No documents uploaded" />
-            ) : (
-              docs.map((d) => (
-                <div
-                  key={d.id}
-                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-accent transition-colors duration-150"
-                >
-                  <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                  <span className="truncate flex-1 text-xs text-muted-foreground">{d.name}</span>
-                  <span
-                    className={cn(
-                      "h-1.5 w-1.5 rounded-full shrink-0",
-                      d.status === "indexed" ? "bg-success" : "bg-warning"
-                    )}
-                  />
-                </div>
-              ))
-            )}
-          </Section>
-
-          {/* Nav */}
-          <Section title="Navigate">
-            {navItems.map((n) => {
-              const active = pathname === n.to || pathname.startsWith(n.to + "/");
-              return (
-                <Link
-                  key={n.to}
-                  to={n.to}
-                  className={cn(
-                    "flex items-center gap-2 rounded-lg px-2 py-2 text-sm",
-                    active
-                      ? "bg-accent text-foreground"
-                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                  )}
-                >
-                  <n.icon className="h-4 w-4" />
-                  <span className="text-xs">{n.label}</span>
-                </Link>
-              );
-            })}
-          </Section>
         </div>
 
         {/* Profile */}
         <div className="border-t border-border p-3">
           <div className="flex items-center gap-2 rounded-lg bg-accent p-2">
-            <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
-              AK
-            </div>
+            {user?.profile_picture ? (
+              <img 
+                src={user.profile_picture} 
+                alt={user.name}
+                className="h-8 w-8 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
+                {user ? getUserInitials(user.name) : 'U'}
+              </div>
+            )}
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium truncate">Alex Kim</div>
-              <div className="text-[10px] text-muted-foreground truncate">alex@lexi.ai</div>
+              <div className="text-xs font-medium truncate">{user?.name || 'User'}</div>
+              <div className="text-[10px] text-muted-foreground truncate">{user?.email || 'user@example.com'}</div>
             </div>
-            <Link
-              to="/login"
+            <button
+              onClick={handleLogout}
               className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-background transition-colors duration-150"
               title="Log out"
             >
               <LogOut className="h-3.5 w-3.5 text-muted-foreground" />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

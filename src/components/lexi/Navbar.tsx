@@ -1,4 +1,4 @@
-import { Menu, Search, Bell, Moon, Sun, LogOut, User, Settings } from "lucide-react";
+import { Menu, Moon, Sun, LogOut } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "@tanstack/react-router";
@@ -66,17 +66,6 @@ export function Navbar({ onMenu, title, subtitle }: NavbarProps) {
           )}
         </div>
 
-        <div className="hidden md:flex items-center gap-2 bg-background border border-border rounded-lg px-3 py-1.5 w-64 hover:border-muted-foreground/30 transition-colors duration-150">
-          <Search className="h-3.5 w-3.5 text-muted-foreground" />
-          <input
-            placeholder="Search..."
-            className="bg-transparent text-sm outline-none placeholder:text-muted-foreground w-full"
-          />
-          <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-accent text-muted-foreground border border-border font-mono">
-            ⌘K
-          </kbd>
-        </div>
-
         <button 
           onClick={toggleTheme}
           className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-accent transition-colors duration-150"
@@ -87,11 +76,6 @@ export function Navbar({ onMenu, title, subtitle }: NavbarProps) {
           ) : (
             <Moon className="h-4 w-4" />
           )}
-        </button>
-
-        <button className="relative h-8 w-8 flex items-center justify-center rounded-lg hover:bg-accent transition-colors duration-150">
-          <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
         </button>
 
         {/* User Profile Dropdown */}
@@ -128,29 +112,6 @@ export function Navbar({ onMenu, title, subtitle }: NavbarProps) {
                     Google
                   </span>
                 )}
-              </div>
-
-              <div className="py-1">
-                <button
-                  onClick={() => {
-                    setShowUserMenu(false);
-                    navigate({ to: '/settings' });
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
-                >
-                  <Settings className="h-4 w-4" />
-                  Settings
-                </button>
-                <button
-                  onClick={() => {
-                    setShowUserMenu(false);
-                    // Navigate to profile page when implemented
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
-                >
-                  <User className="h-4 w-4" />
-                  Profile
-                </button>
               </div>
 
               <div className="border-t border-border py-1">
