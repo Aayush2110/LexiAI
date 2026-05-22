@@ -52,15 +52,9 @@ function Landing() {
           <div className="flex items-center gap-2">
             <Link
               to="/login"
-              className="hidden sm:inline-flex text-sm px-3.5 py-2 rounded-xl hover:bg-accent transition-all duration-200"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/signup"
               className="text-sm px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300"
             >
-              Get started
+              Log in
             </Link>
           </div>
         </div>

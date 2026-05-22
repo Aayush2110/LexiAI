@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
-import { Send, Paperclip, Sparkles, Scale, FileSearch, AlertTriangle, DollarSign } from "lucide-react";
+import { Send, Paperclip, Sparkles, FileText, FileSearch, AlertTriangle, DollarSign } from "lucide-react";
 import { MessageBubble, TypingIndicator, type Message } from "./MessageBubble";
 
 interface ChatLayoutProps {
@@ -10,7 +10,7 @@ interface ChatLayoutProps {
 }
 
 const SUGGESTIONS = [
-  { icon: Scale, title: "Summarize this contract", desc: "Get the key terms in plain English." },
+  { icon: FileText, title: "Summarize this contract", desc: "Get the key terms in plain English." },
   { icon: AlertTriangle, title: "Explain termination clause", desc: "Understand cancellation rights." },
   { icon: FileSearch, title: "Find legal risks", desc: "Spot ambiguous or risky language." },
   { icon: DollarSign, title: "Extract payment terms", desc: "Surface fees, schedules, penalties." },
@@ -48,9 +48,6 @@ export function ChatLayout({ messages, loading, onSend, onRegenerate }: ChatLayo
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-8">
           {empty ? (
             <div className="text-center py-12">
-              <div className="mx-auto h-12 w-12 rounded-lg bg-accent border border-border flex items-center justify-center mb-6">
-                <Sparkles className="h-6 w-6" />
-              </div>
               <h1 className="text-2xl sm:text-3xl font-semibold">
                 AI Legal Assistant
               </h1>

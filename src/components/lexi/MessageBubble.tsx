@@ -35,12 +35,6 @@ export function MessageBubble({
     <div
       className={cn("group flex gap-3 w-full", isUser ? "justify-end" : "justify-start")}
     >
-      {!isUser && (
-        <div className="h-8 w-8 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
-          <Sparkles className="h-4 w-4" />
-        </div>
-      )}
-
       <div className={cn("flex flex-col gap-1.5 max-w-[85%] sm:max-w-[75%]", isUser && "items-end")}>
         <div
           className={cn(
@@ -74,8 +68,6 @@ export function MessageBubble({
             isUser && "flex-row-reverse"
           )}
         >
-          <span>{time}</span>
-          <span>·</span>
           <button
             onClick={copy}
             className="inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-foreground"
@@ -84,22 +76,19 @@ export function MessageBubble({
             {copied ? "Copied" : "Copy"}
           </button>
           {!isUser && onRegenerate && (
-            <button
-              onClick={() => onRegenerate(message.id)}
-              className="inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-foreground"
-            >
-              <RefreshCw className="h-3 w-3" />
-              Regenerate
-            </button>
+            <>
+              <span>·</span>
+              <button
+                onClick={() => onRegenerate(message.id)}
+                className="inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:text-foreground"
+              >
+                <RefreshCw className="h-3 w-3" />
+                Regenerate
+              </button>
+            </>
           )}
         </div>
       </div>
-
-      {isUser && (
-        <div className="h-8 w-8 shrink-0 rounded-lg bg-accent border border-border flex items-center justify-center">
-          <User className="h-4 w-4 text-foreground" />
-        </div>
-      )}
     </div>
   );
 }

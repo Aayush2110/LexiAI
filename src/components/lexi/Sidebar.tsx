@@ -160,22 +160,7 @@ export function Sidebar({
         <div className="flex items-center justify-between px-4 h-14 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="16" 
-                height="16" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2.5" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-                className="text-primary-foreground"
-              >
-                <line x1="12" y1="3" x2="12" y2="21"></line>
-                <path d="m16 16 3-11 3 11c0 1.66-1.34 3-3 3s-3-1.34-3-3Z"></path>
-                <path d="m2 16 3-11 3 11c0 1.66-1.34 3-3 3s-3-1.34-3-3Z"></path>
-              </svg>
+              <Scale className="h-4 w-4 text-primary-foreground" />
             </div>
             <div>
               <div className="font-semibold text-sm">LexiAI</div>

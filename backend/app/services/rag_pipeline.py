@@ -37,6 +37,7 @@ RAG Benefits:
 
 from typing import List, Dict, Tuple
 from loguru import logger
+from app.core.config import settings
 from app.services.document_loader import document_loader
 from app.services.chunking import chunking_service
 from app.services.vector_store import vector_store_service
