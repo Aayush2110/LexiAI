@@ -6,7 +6,7 @@ echo.
 
 echo Starting Backend...
 cd backend
-start "LexiAI Backend" cmd /k "venv\Scripts\python -m app.main"
+start "LexiAI Backend" cmd /k "call venv\Scripts\activate.bat && python -m app.main"
 cd ..
 
 timeout /t 3 /nobreak >nul

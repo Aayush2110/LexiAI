@@ -15,7 +15,7 @@ timeout /t 2 /nobreak >nul
 echo.
 echo Step 2: Starting Backend...
 cd backend
-start cmd /k "echo Starting Backend... && venv\Scripts\python -m app.main"
+start cmd /k "call venv\Scripts\activate.bat && python -m app.main"
 cd ..
 
 echo.
