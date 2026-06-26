@@ -1,10 +1,6 @@
 {
   "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/.output/public",
-  "framework": null,
-  "functions": {
-    "api/**": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "installCommand": "cd frontend && npm install",
+  "framework": null
 }
