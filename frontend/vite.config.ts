@@ -3,9 +3,9 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
-import { cloudflare } from "@cloudflare/vite-plugin";
+import { nitro } from "nitro/vite";
 
-export default defineConfig(({ command }) => ({
+export default defineConfig({
   publicDir: "public",
   plugins: [
     tsConfigPaths({ projects: ["./tsconfig.json"] }),
@@ -20,8 +20,8 @@ export default defineConfig(({ command }) => ({
       },
     }),
     viteReact(),
-    command === "build" ? cloudflare({ viteEnvironment: { name: "ssr" } }) : undefined,
-  ].filter(Boolean),
+    nitro(),
+  ],
   resolve: {
     dedupe: [
       "react",
@@ -40,4 +40,5 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-}));
+});
+
