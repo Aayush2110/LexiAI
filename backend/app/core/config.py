@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     
     # Server Configuration
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = int(os.environ.get("PORT", 8000))
     
     # CORS Settings - Frontend URLs that can access this API
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
@@ -78,7 +78,7 @@ class Settings(BaseSettings):
     MONGODB_DB_NAME: str = "chat_companion"
     
     # ChromaDB Configuration
-    CHROMA_PERSIST_DIR: str = "./data/chromadb"
+    CHROMA_PERSIST_DIR: str = os.environ.get("CHROMA_PERSIST_DIR", "./data/chromadb")
     
     # JWT Authentication
     JWT_SECRET_KEY: str = "your-secret-key-change-in-production-min-32-chars"
@@ -123,7 +123,14 @@ class Settings(BaseSettings):
     @property
     def uploads_dir(self) -> str:
         """Directory for uploaded files"""
-        path = os.path.join(self.BASE_DIR, "data", "uploads")
+        # Use /data for Render persistent disk or fallback to local
+        uploads_path = os.environ.get("UPLOADS_DIR")
+        if uploads_path:
+            path = uploads_path
+        elif os.path.isabs(self.BASE_DIR):
+            path = os.path.join(self.BASE_DIR, "data", "uploads")
+        else:
+            path = os.path.join(self.BASE_DIR, "data", "uploads")
         os.makedirs(path, exist_ok=True)
         return path
     

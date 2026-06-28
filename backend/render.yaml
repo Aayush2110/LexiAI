@@ -2,21 +2,24 @@ services:
   - type: web
     name: legalrag-backend
     env: python
+    runtime: python
     region: oregon
     plan: free
     branch: main
     rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      # LLM Provider Configuration
       - key: LLM_PROVIDER
         sync: false
       - key: GOOGLE_API_KEY
         sync: false
       - key: OPENAI_API_KEY
         sync: false
+      # Application Settings
       - key: APP_NAME
         value: LegalRAG AI Chatbot
       - key: APP_VERSION
@@ -25,20 +28,25 @@ services:
         value: False
       - key: HOST
         value: 0.0.0.0
-      - key: PORT
-        value: 10000
+      # CORS Settings - Must include Vercel frontend URL
       - key: CORS_ORIGINS
         sync: false
+      # Database Configuration
       - key: MONGODB_URL
         sync: false
       - key: MONGODB_DB_NAME
         value: chat_companion
+      # Storage Configuration - Use /data for persistent disk
       - key: CHROMA_PERSIST_DIR
-        value: /opt/render/project/data/chromadb
+        value: /data/chromadb
+      - key: UPLOADS_DIR
+        value: /data/uploads
+      # File Upload Settings
       - key: MAX_FILE_SIZE_MB
         value: 10
       - key: ALLOWED_EXTENSIONS
         value: pdf,docx,txt
+      # RAG Configuration
       - key: CHUNK_SIZE
         value: 1000
       - key: CHUNK_OVERLAP
@@ -47,6 +55,7 @@ services:
         value: 4
       - key: EMBEDDING_MODEL
         value: sentence-transformers/all-MiniLM-L6-v2
+      # Hybrid Search Configuration
       - key: USE_HYBRID_SEARCH
         value: True
       - key: USE_RERANKING
@@ -59,10 +68,12 @@ services:
         value: 0.5
       - key: RERANKER_MODEL
         value: cross-encoder/ms-marco-MiniLM-L-6-v2
+      # Query Enhancement Configuration
       - key: USE_QUERY_ENHANCEMENT
         value: True
       - key: EXPAND_QUERIES
         value: True
+      # Context Compression Configuration
       - key: USE_CONTEXT_COMPRESSION
         value: True
       - key: RELEVANCE_THRESHOLD
@@ -71,17 +82,60 @@ services:
         value: 10
       - key: MAX_CONTEXT_TOKENS
         value: 2000
+      # LLM Settings
       - key: LLM_TEMPERATURE
         value: 0.1
       - key: LLM_MAX_TOKENS
         value: 500
+      # JWT Authentication
       - key: JWT_SECRET_KEY
         sync: false
       - key: JWT_ALGORITHM
         value: HS256
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: 10080
+      # Google OAuth
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
         sync: false
+      # Email Configuration
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 587
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: EMAIL_FROM_NAME
+        value: LexiAI
+      # Password Reset
+      - key: RESET_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: FRONTEND_URL
+        sync: false
+    
+    # Persistent disk for ChromaDB and uploads (REQUIRED for data persistence)
+    disk:
+      name: legalrag-data
+      mountPath: /data
+      sizeGB: 1
+
+# IMPORTANT: After creating this service on Render:
+# 1. Add a Persistent Disk in Render Dashboard (1GB minimum)
+# 2. Set all environment variables marked with 'sync: false' in Render Dashboard
+# 3. Required environment variables to set:
+#    - LLM_PROVIDER (e.g., "gemini" or "openai")
+#    - GOOGLE_API_KEY (your Google API key)
+#    - CORS_ORIGINS (e.g., "https://your-frontend.vercel.app,http://localhost:3000")
+#    - MONGODB_URL (your MongoDB connection string)
+#    - JWT_SECRET_KEY (generate a strong random key)
+#    - GOOGLE_CLIENT_ID (for OAuth)
+#    - GOOGLE_CLIENT_SECRET (for OAuth)
+#    - EMAIL_USER (SMTP email address)
+#    - EMAIL_PASSWORD (SMTP password/app password)
+#    - EMAIL_FROM (sender email address)
+#    - FRONTEND_URL (your Vercel frontend URL)

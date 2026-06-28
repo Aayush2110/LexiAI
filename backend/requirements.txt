@@ -2,6 +2,7 @@
 fastapi==0.115.0
 uvicorn[standard]==0.32.0
 python-multipart==0.0.12
+gunicorn==21.2.0
 
 # Database
 motor>=3.5.0,<4.0.0
@@ -25,15 +26,18 @@ aiosmtplib==3.0.2
 email-validator==2.2.0
 
 # RAG Dependencies
-langchain==0.1.0
-langchain-community==0.0.13
-langchain-google-genai==0.0.6
+langchain==0.3.7
+langchain-community==0.3.5
+langchain-google-genai==2.0.5
+langchain-core==0.3.15
 chromadb==0.4.22
 sentence-transformers==2.3.1
-pypdf==3.17.4
+PyMuPDF==1.23.26
 python-docx==1.1.0
 faiss-cpu==1.7.4
 
 # Enhanced RAG - Hybrid Search & Reranking
-rank-bm25==0.2.2  # BM25 keyword search
-sentence-transformers>=2.3.1  # For cross-encoder reranking
+rank-bm25==0.2.2
+
+# HTTP Client (for langchain)
+httpx==0.27.0
