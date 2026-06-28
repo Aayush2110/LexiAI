@@ -16,6 +16,7 @@ async def health_check():
     """
     Health check endpoint
     
+    
     Returns service status and version information.
     Useful for:
     - Load balancer health checks

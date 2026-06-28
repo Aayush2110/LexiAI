@@ -60,7 +60,7 @@ htmlcov/
 .ipynb_checkpoints
 
 # Models (if downloaded)
-models/
+
 *.bin
 *.pt
 *.pth
